@@ -1,0 +1,9 @@
+.world {
+  max-width: 800px;
+}
+
+@media only screen and (max-width: 1200px) {
+  .world {
+    max-width: 90%;
+  }
+}

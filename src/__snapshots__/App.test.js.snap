@@ -1,0 +1,680 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App - should create snapshot 1`] = `
+<main
+  style={
+    Object {
+      "background": "#242730",
+    }
+  }
+>
+  <nav
+    className="navbar navbar-inverse"
+  >
+    <div
+      className="container"
+    >
+      <ul
+        className="nav navbar-nav navbar-right"
+        role={null}
+      >
+        <a
+          href="/"
+          onClick={[Function]}
+          onSelect={[Function]}
+        >
+          <img
+            className="logo-standard"
+            src="https://lida.leeds.ac.uk/wp-content/themes/lida/resources/images/uol-logo.png"
+            style={
+              Object {
+                "height": "46px",
+                "maxHeight": "46px",
+              }
+            }
+          />
+          <img
+            className="logo-mobile"
+            src="https://lida.leeds.ac.uk/wp-content/themes/lida/resources/images/uol-logo-sml.png"
+            style={
+              Object {
+                "height": "46",
+                "maxHeight": "46",
+              }
+            }
+          />
+        </a>
+      </ul>
+      <button
+        className="navbar-toggle collapsed"
+        onClick={[Function]}
+        type="button"
+      >
+        <span
+          className="sr-only"
+        >
+          Toggle navigation
+        </span>
+        <span
+          className="icon-bar"
+        />
+        <span
+          className="icon-bar"
+        />
+        <span
+          className="icon-bar"
+        />
+      </button>
+      <div
+        aria-expanded={null}
+        className="navbar-collapse collapse"
+      >
+        <ul
+          className="nav navbar-nav navbar-left"
+          role={null}
+        >
+          <li
+            className=""
+            role="presentation"
+          >
+            <a
+              href="#"
+              onClick={[Function]}
+              onKeyDown={[Function]}
+              role="button"
+            >
+              About
+            </a>
+          </li>
+          <li
+            className="ghbutton"
+            role="presentation"
+          >
+            <a
+              href="https://github.com/layik/eAtlas"
+              onClick={[Function]}
+              onKeyDown={[Function]}
+            >
+              <i
+                className="fa fa-github"
+                style={
+                  Object {
+                    "fontSize": "1.5em",
+                  }
+                }
+              />
+            </a>
+          </li>
+          <li
+            className="themebutton"
+            role="presentation"
+          >
+            <a
+              href="#"
+              onClick={[Function]}
+              onKeyDown={[Function]}
+              role="button"
+            >
+              <svg
+                aria-hidden="true"
+                height="20"
+                viewBox="0 0 24 24"
+                width="20"
+              >
+                <g
+                  transform="matrix( 1 0 0 1 4 1 )"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M15.3999 11C15.7999 10.1 16 9 16 8C16 3.6 12.4 0 8 0C3.6 0 0 3.6 0 8C0 9.1 0.200098 10.1 0.600098 11L2.19995 15L13.8 15L15.3999 11ZM11 22L12.6001 18L3.3999 18L5 22L11 22Z"
+                    fill="#fff"
+                    fill-rule="evenodd"
+                    opacity="1"
+                  />
+                </g>
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div>
+    <div
+      id="html2pdf"
+    >
+      <div
+        className="loader"
+        style={
+          Object {
+            "visibility": "visible",
+            "zIndex": 999,
+          }
+        }
+      />
+      <div
+        style={
+          Object {
+            "cursor": "grab",
+            "height": "668px",
+            "position": "relative",
+            "width": "1024px",
+          }
+        }
+      >
+        <div
+          style={
+            Object {
+              "height": "100%",
+              "position": "relative",
+              "width": "100%",
+            }
+          }
+        >
+          <div
+            className=""
+            style={
+              Object {
+                "height": "100%",
+                "overflow": "hidden",
+                "position": "absolute",
+                "visibility": "inherit",
+                "width": "100%",
+              }
+            }
+          />
+          <div
+            style={
+              Object {
+                "height": 0,
+                "overflow": "visible",
+                "width": 0,
+              }
+            }
+          />
+        </div>
+      </div>
+      <div
+        className="side-panel-container"
+        style={
+          Object {
+            "marginLeft": 0,
+          }
+        }
+      >
+        <div
+          className="side-panel"
+          style={
+            Object {
+              "background": "#242730",
+              "color": "white",
+            }
+          }
+        >
+          <div
+            className="side-pane-header"
+            style={
+              Object {
+                "background": "#29323C",
+              }
+            }
+          >
+            <h4>
+              Nothing to show
+            </h4>
+          </div>
+          <div>
+            data from 
+            <a
+              href="https://coronavirus.data.gov.uk/"
+            >
+              PHE
+            </a>
+            <br />
+            <div
+              aria-label="button group"
+              className="ae"
+              data-baseweb="button-group"
+            >
+              <button
+                className="af ag ah ai aj ak al am an ao ap aq ar as at au av aw ax ay az b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 ba bb"
+                data-baseweb="button"
+                disabled={false}
+                onClick={[Function]}
+              >
+                LA
+              </button>
+              <button
+                className="af ag ah ai aj ak al am an ao ap aq ar as at au av aw ax ay az b0 b1 b2 b3 bc bd b6 b7 b8 b9 ba be bf bg bh"
+                data-baseweb="button"
+                disabled={false}
+                onClick={[Function]}
+              >
+                RE
+              </button>
+              <button
+                className="af ag ah ai aj ak al am an ao ap aq ar as at au av aw ax ay az b0 b1 b2 b3 bc bd b6 b7 b8 b9 ba be bf bg bh"
+                data-baseweb="button"
+                disabled={false}
+                onClick={[Function]}
+              >
+                UK
+              </button>
+              <button
+                className="af ag ah ai aj ak al am an ao ap aq ar as at au av aw ax ay az b0 b1 bi bj bc bd b6 b7 b8 b9 ba be bf bg bh"
+                data-baseweb="button"
+                disabled={false}
+                onClick={[Function]}
+              >
+                World
+              </button>
+            </div>
+            <i
+              className="fa fa-table"
+              onClick={[Function]}
+              style={
+                Object {
+                  "cursor": "pointer",
+                  "fontSize": "1.5em",
+                  "margin": 5,
+                }
+              }
+            />
+          </div>
+          <div
+            className="side-panel-body"
+          >
+            <div
+              className="side-panel-body-content"
+            >
+              <hr
+                style={
+                  Object {
+                    "clear": "both",
+                  }
+                }
+              />
+              <div
+                id="main-tabs"
+              >
+                <ul
+                  className="nav nav-tabs"
+                  role="tablist"
+                >
+                  <li
+                    className="active"
+                    role="presentation"
+                  >
+                    <a
+                      aria-controls="main-tabs-pane-1"
+                      aria-selected={true}
+                      href="#"
+                      id="main-tabs-tab-1"
+                      onClick={[Function]}
+                      onKeyDown={[Function]}
+                      role="tab"
+                    >
+                      <i
+                        className="fa fa-info"
+                        style={
+                          Object {
+                            "fontSize": "2rem",
+                          }
+                        }
+                      />
+                    </a>
+                  </li>
+                  <li
+                    className=""
+                    role="presentation"
+                  >
+                    <a
+                      aria-controls="main-tabs-pane-2"
+                      aria-selected={false}
+                      href="#"
+                      id="main-tabs-tab-2"
+                      onClick={[Function]}
+                      onKeyDown={[Function]}
+                      role="tab"
+                      tabIndex={-1}
+                    >
+                      <i
+                        className="fa fa-sliders"
+                        style={
+                          Object {
+                            "fontSize": "2rem",
+                          }
+                        }
+                      />
+                    </a>
+                  </li>
+                  <li
+                    className=""
+                    role="presentation"
+                  >
+                    <a
+                      aria-controls="main-tabs-pane-3"
+                      aria-selected={false}
+                      href="#"
+                      id="main-tabs-tab-3"
+                      onClick={[Function]}
+                      onKeyDown={[Function]}
+                      role="tab"
+                      tabIndex={-1}
+                    >
+                      <i
+                        className="fa fa-filter"
+                        style={
+                          Object {
+                            "fontSize": "2rem",
+                          }
+                        }
+                      />
+                    </a>
+                  </li>
+                </ul>
+                <div
+                  className="tab-content"
+                >
+                  <div
+                    aria-hidden={false}
+                    aria-labelledby="main-tabs-tab-1"
+                    className="fade tab-pane active in"
+                    id="main-tabs-pane-1"
+                    role="tabpanel"
+                  >
+                    Main view
+                  </div>
+                  <div
+                    aria-hidden={true}
+                    aria-labelledby="main-tabs-tab-2"
+                    className="fade tab-pane"
+                    id="main-tabs-pane-2"
+                    role="tabpanel"
+                  >
+                    Map Styles
+                    <br />
+                    <div
+                      className="dropdown btn-group"
+                    >
+                      <button
+                        aria-expanded={false}
+                        aria-haspopup={true}
+                        className="dropdown-toggle btn btn-default"
+                        disabled={false}
+                        id="dropdown-size-medium"
+                        onClick={[Function]}
+                        onKeyDown={[Function]}
+                        role="button"
+                        style={
+                          Object {
+                            "width": "100%",
+                          }
+                        }
+                        type="button"
+                      >
+                        Default(dark)
+                         
+                        <span
+                          className="caret"
+                        />
+                      </button>
+                      <ul
+                        aria-labelledby="dropdown-size-medium"
+                        className="dropdown-menu"
+                        role="menu"
+                      >
+                        <li
+                          className="mi-class"
+                          role="presentation"
+                        >
+                          <a
+                            href="#"
+                            onClick={[Function]}
+                            onKeyDown={[Function]}
+                            role="menuitem"
+                            tabIndex="-1"
+                          >
+                            Dark
+                          </a>
+                        </li>
+                        <li
+                          className="mi-class"
+                          role="presentation"
+                        >
+                          <a
+                            href="#"
+                            onClick={[Function]}
+                            onKeyDown={[Function]}
+                            role="menuitem"
+                            tabIndex="-1"
+                          >
+                            Basic
+                          </a>
+                        </li>
+                        <li
+                          className="mi-class"
+                          role="presentation"
+                        >
+                          <a
+                            href="#"
+                            onClick={[Function]}
+                            onKeyDown={[Function]}
+                            role="menuitem"
+                            tabIndex="-1"
+                          >
+                            Streets
+                          </a>
+                        </li>
+                        <li
+                          className="mi-class"
+                          role="presentation"
+                        >
+                          <a
+                            href="#"
+                            onClick={[Function]}
+                            onKeyDown={[Function]}
+                            role="menuitem"
+                            tabIndex="-1"
+                          >
+                            Bright
+                          </a>
+                        </li>
+                        <li
+                          className="mi-class"
+                          role="presentation"
+                        >
+                          <a
+                            href="#"
+                            onClick={[Function]}
+                            onKeyDown={[Function]}
+                            role="menuitem"
+                            tabIndex="-1"
+                          >
+                            Light
+                          </a>
+                        </li>
+                        <li
+                          className="mi-class"
+                          role="presentation"
+                        >
+                          <a
+                            href="#"
+                            onClick={[Function]}
+                            onKeyDown={[Function]}
+                            role="menuitem"
+                            tabIndex="-1"
+                          >
+                            Satellite
+                          </a>
+                        </li>
+                        <li
+                          className="mi-class"
+                          role="presentation"
+                        >
+                          <a
+                            href="#"
+                            onClick={[Function]}
+                            onKeyDown={[Function]}
+                            role="menuitem"
+                            tabIndex="-1"
+                          >
+                            No map
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div
+                    aria-hidden={true}
+                    aria-labelledby="main-tabs-tab-3"
+                    className="fade tab-pane"
+                    id="main-tabs-pane-3"
+                    role="tabpanel"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="space"
+            />
+            <form
+              className="search-form"
+              onSubmit={[Function]}
+            >
+              <div
+                className="form-group"
+              >
+                <span
+                  className="input-group"
+                >
+                  <input
+                    className="form-control"
+                    onChange={[Function]}
+                    placeholder="fly to..."
+                    style={
+                      Object {
+                        "background": "#242730",
+                        "color": "white",
+                      }
+                    }
+                    type="text"
+                  />
+                  <span
+                    className="input-group-addon"
+                    style={
+                      Object {
+                        "background": "#242730",
+                        "color": "white",
+                      }
+                    }
+                  >
+                    <span
+                      className="glyphicon glyphicon-search"
+                    />
+                  </span>
+                </span>
+              </div>
+            </form>
+            <img
+              alt="LIDA logo"
+              src="data:image/png;base64,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"
+            />
+          </div>
+        </div>
+        <div
+          className="close-button"
+          onClick={[Function]}
+          style={
+            Object {
+              "color": "white",
+            }
+          }
+        >
+          <div
+            style={
+              Object {
+                "backgroundColor": "#242730",
+              }
+            }
+          >
+            <i
+              className="fa fa-arrow-circle-left"
+              style={
+                Object {
+                  "color": "white !important",
+                  "fontSize": "2rem",
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        className="uol-wrapper"
+      >
+        <p>
+          © 
+           University of Leeds, Leeds, LS2 9JT
+        </p>
+        <div
+          class="menu-footer-menu-container"
+        >
+          <ul
+            className="menu"
+            id="menu-footer-menu"
+          >
+            <li
+              className="menu-item menu-item-type-custom menu-item-object-custom menu-item-53"
+              id="menu-item-53"
+            >
+              <a
+                href="http://www.leeds.ac.uk/termsandconditions"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Terms & Conditions
+              </a>
+            </li>
+            <li
+              className="menu-item menu-item-type-custom menu-item-object-custom menu-item-54"
+              id="menu-item-54"
+            >
+              <a
+                href="http://www.leeds.ac.uk/accessibility"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Accessibility
+              </a>
+            </li>
+            <li
+              className="menu-item menu-item-type-post_type menu-item-object-page menu-item-487"
+              id="menu-item-487"
+            >
+              <a
+                href="https://lida.leeds.ac.uk/privacy/"
+              >
+                Privacy
+              </a>
+            </li>
+            <li
+              className="menu-item menu-item-type-custom menu-item-object-custom menu-item-484"
+              id="menu-item-484"
+            >
+              <a
+                href="http://www.leeds.ac.uk/foi"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Freedom of Information
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div />
+</main>
+`;
