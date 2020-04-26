@@ -119,9 +119,7 @@ function generateExpGrowth(slicedMulti, increase) {
   
   return expGrowth;
 
-  function loop(inc) {
-    console.log(inc);
-    
+  function loop(inc) {    
     for (let i = 1; i < slicedMulti[0].length; i++) {
       const y = +(expGrowth[i - 1].y);
       expGrowth.push({
