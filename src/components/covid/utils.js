@@ -3,6 +3,8 @@ import xmlToJSON from 'xmltojson';
 
 import { isArray } from "../../JSUtils";
 
+const pop = [55977178, 1881641, 5438100,3138631]
+
 const countryHistory = (data, by = "cases", min = 200, max=500, 
 list) => {
   if(!data || data.length === 0) return null;
@@ -97,7 +99,7 @@ const assembleGeojsonFrom = (geojson, phe, date, type = "utlas") => {
   };
   const measure = type === "countries" ?
     'dailyTotalDeaths' : 'dailyTotalConfirmedCases';
-  geojson.features.forEach((f, i) => {
+  geojson.features.forEach(f => {
     Object.keys(phe[type]).forEach(each => {
       if(f.properties.ctyua19cd === each || 
         f.properties.ctry19cd === each ||

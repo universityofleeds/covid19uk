@@ -11,7 +11,7 @@ export default React.memo((props) => {
   const [start, setStart] = useState(20);
   const [end, setEnd] = useState(days + 1);
   const [value, setValue] = useState([days - 30, days]);
-  const [increase, setIncrease] = useState([22]);
+  const [increase, setIncrease] = useState([15]);
 
   let sliced = daily.slice(0, days);
   let testsSliced = tests.slice(0, days)
@@ -39,7 +39,7 @@ export default React.memo((props) => {
         y: 0
       }
     }
-    data.dailyTotalDeaths.forEach(e => {
+    data.dailyDeaths.forEach(e => {
       if(e.date === sliced[i].date) {
         slicedMulti[2][i] = {
           x: e.date,
@@ -53,40 +53,19 @@ export default React.memo((props) => {
         y: 0
       }
     }
-    data.dailyDeaths.forEach(e => {
-      if(e.date === sliced[i].date) {
-        slicedMulti[3][i] = {
-          x: e.date,
-          y: e.value
-        }
-      }
-    })
-    if(!slicedMulti[3][i]) {
-      slicedMulti[3][i] = {
-        x: sliced[i].date,
-        y: 0
-      }
-    }
   }
   // console.log(testsSliced);
   
-  const expGrowth = [slicedMulti[0][0]];
-  for (let i = 1; i < slicedMulti[0].length; i++) {
-    const y = +(expGrowth[i - 1].y)
-    expGrowth.push({
-      x: slicedMulti[0][i].x,
-      y: (y + y * (increase[0]/100)).toFixed(2)
-    })
-  }
+  const expGrowth = generateExpGrowth(slicedMulti, increase);
   
   return(
     <>
       <MultiLinePlot
         dark={dark}
         data={
-          [slicedMulti[1], slicedMulti[2], slicedMulti[3]]
-        } legend={["DailyCases", "Death", "DailyDeaths"]}
-        title={"DailyVsDeaths (England)"} noXAxis={true}
+          [slicedMulti[1], slicedMulti[2]]
+        } legend={["DailyCases", "DailyDeaths"]}
+        title={"DailyVsDeaths (England)"} 
         plotStyle={{ height: 200, marginBottom: 10 }}
       />
       
@@ -94,14 +73,14 @@ export default React.memo((props) => {
         dark={dark}
         data={
           [slicedMulti[0],
-            testsSliced.map(e => ({ x: e.x, y: e.y / 10 })),
+            // testsSliced.map(e => ({ x: e.x, y: e.y / 10 })),
             expGrowth
           ]
-        } legend={["Cases", "Tests", increase + "%"]}
-        title={"CasesVsTests÷10"}
+        } legend={["Cases", increase + "%"]}
+        title={"Cases increase % (England):"}
         plotStyle={{ height: 200, marginBottom:60 }} noLimit={true}
       />
-      {daily[0].date + " to " + daily[days].date}
+      {`Total ${days} days: ` + daily[0].date + " to " + daily[days].date}
       <Slider
         min={0} max={days}
         value={value}
@@ -126,3 +105,30 @@ export default React.memo((props) => {
     </>
   )
 })
+
+function generateExpGrowth(slicedMulti, increase) {
+  let expGrowth = [slicedMulti[0][0]];
+  let i = increase[0];
+  loop(i);
+  // do {
+  //   i = i - 1;
+  //   expGrowth = [slicedMulti[0][0]]
+  //   loop(i);    
+  // } while ((expGrowth[expGrowth.length - 1].y > slicedMulti[0][slicedMulti[0].length-1].y))
+  // console.log(expGrowth);
+  
+  return expGrowth;
+
+  function loop(inc) {
+    console.log(inc);
+    
+    for (let i = 1; i < slicedMulti[0].length; i++) {
+      const y = +(expGrowth[i - 1].y);
+      expGrowth.push({
+        x: slicedMulti[0][i].x,
+        y: (y + y * (inc / 100)).toFixed(2)
+      });
+    }
+  }
+}
+

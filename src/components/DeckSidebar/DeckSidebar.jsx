@@ -131,6 +131,7 @@ export default class DeckSidebar extends React.Component {
             }}
             className="side-pane-header">
             <h4>
+              {console.log(historyData && historyData)}
             {
               //if specific region shown, show its count
               multiVarSelect.name && multiVarSelect.name.size === 1 ?
@@ -141,8 +142,16 @@ export default class DeckSidebar extends React.Component {
                         +(t.properties.totalCases) + +(next.properties.totalCases)) + " cases"
                 :
                 (historyData && historyData.overview && !datasetName.endsWith("covid19w")) ?
-                historyData.overview.K02000001.totalCases.value + " cases, " +
-                historyData.overview.K02000001.deaths.value + " deaths"
+                <>
+                  {
+                    historyData.overview.K02000001.totalCases.value + " cases, "                    
+                  }
+                  <span style={{color: "red"}}>
+                    {
+                      historyData.overview.K02000001.deaths.value + " deaths"
+                    }
+                  </span>
+                </>
                 :
                 data && data.length ?
                     data && data.length && data[0].properties.cases &&

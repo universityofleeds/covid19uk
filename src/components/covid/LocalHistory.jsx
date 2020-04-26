@@ -11,8 +11,10 @@ import MultiSelect from '../MultiSelect';
 import './style.css';
 
 export default React.memo((props) => {
-  const [minMax, setMinMax] = useState([200, 500]);
+  // const [shownGeos, setShownGeos] = useState([50]);
   const [checked, setChecked] = useState(false);
+  const [allDates, setAllDates] = useState(false);
+
   const [{ geo, avg, geoHistory }, setData] =
     useState({ geo: null, avg: null, geoHistory: null });
   const [filteredHistory, setFilteredHistory] = useState(null);
@@ -20,12 +22,16 @@ export default React.memo((props) => {
   const { dark, onSelectCallback, hintXValue, type } = props;
 
   React.useEffect(() => {
-    initialState(props.data, setData, setFilteredHistory, type);
-  }, [type])
+    initialState({data: props.data, setData, setFilteredHistory, 
+      type, allDates});
+  }, [type, allDates])
 
+  const measure = type === "countries" ?
+    'dailyTotalDeaths' : 'dailyTotalConfirmedCases';
+  
   if (filteredHistory) {
     //list history
-    let keys = Object.keys(filteredHistory);    
+    let keys = Object.keys(filteredHistory); //.slice(0, shownGeos);
     if (!keys.includes('avg') && type !== "countries" && !checked) {
       filteredHistory.avg = avg;
       keys.push("avg")
@@ -55,24 +61,14 @@ export default React.memo((props) => {
           }}
         // single={true}
         />}
-        {/* <Slider
-            min={1} 
-            max={}
-            value={minMax}
-            onChange={({ value }) => {
-              if (value && value[0] < value[1]) {
-                setMinMax(value);
-              }
-            }}
-          /> */}
         <MultiLinePlot
           dark={dark}
           data={keys
             .map(e => filteredHistory[e]
               .slice(filteredHistory[e].length - 35, filteredHistory[e].length))}
           legend={keys}
-          title={type + ": " + 'dailyTotalCases' + 
-          (type !== "countries" && " vs avg.")}
+          title={type + ": " + measure + 
+          (type !== "countries" ? " vs avg." : "")}
           plotStyle={{
             // width: W, 
             marginBottom: 60
@@ -87,7 +83,7 @@ export default React.memo((props) => {
             hintXValue(xValue)}
         />
         {
-          type === "countries" &&
+          type === "countries" ?
           <Checkbox
             checked={checked}
             onChange={e => {
@@ -105,6 +101,29 @@ export default React.memo((props) => {
               }
             }}
           >Hide England</Checkbox>
+          :
+          <>
+            <Checkbox
+              checked={allDates}
+              onChange={e => {              
+                setAllDates(e.target.checked)
+              }}
+            >Longest period</Checkbox>
+            {/* {type === 'utlas' && 
+            <>
+              <Slider
+                min={1} 
+                max={geo.length}
+                value={shownGeos}
+                onChange={({ value }) => {
+                  if (value) {
+                    setShownGeos(value);
+                  }
+                }}
+              />
+              Number of local authorities shown.
+            </>}  */}
+          </>
         }
         <hr />
       </>
@@ -114,22 +133,21 @@ export default React.memo((props) => {
   }
 });
 
-function initialState(data, setData, setFilteredHistory, type = "utlas") {
+function initialState(options) {
+  const {data, setData, setFilteredHistory, 
+    type = "utlas", allDates = false} = options
   const geoHistory = {};
   const measure = type === "countries" ?
     'dailyTotalDeaths' : 'dailyTotalConfirmedCases';
   //add average
-  const avg = []; let m = 0, utla;
-  // find longest  
+  const avg = []; let m = allDates ? 0 : 1e10, utla;
+  // find longest/shortest
   Object.keys(data[type]).map(e => {
-    const cc = data[type][e].dailyTotalConfirmedCases;
-    if (cc && cc.length > m) {
+    const cc = data[type][e][measure];
+    if (cc && (allDates ? cc.length > m : cc.length < m)) {
       m = cc.length; utla = data[type][e];
     }
-    geoHistory[data[type][e].name.value] =
-      data[type][e][measure].map(v => ({ x: v.date, y: v.value }))
   })
-  const geo = Object.keys(geoHistory);
 
   utla[measure].map(v => {
     //e.date, e.value
@@ -137,16 +155,21 @@ function initialState(data, setData, setFilteredHistory, type = "utlas") {
     //go through the rest and add values of same dates
     Object.keys(data[type]).map(e => {
       const cc = data[type][e][measure];
+      if(!geoHistory[data[type][e].name.value]) {
+        geoHistory[data[type][e].name.value] = [];
+      }
       cc.map(ov => {
         if (utla.name !== data[type][e].name.value) {
           if (ov.date === v.date) {
-            y += ov.value
+            y += ov.value;
+            geoHistory[data[type][e].name.value].push({x: v.date, y: ov.value })
           }
         }
       })
     })
     avg.push({ x: v.date, y: Math.floor(y / Object.keys(data[type]).length) })
   })
+  const geo = Object.keys(geoHistory);
 
   setData({ geo, avg, geoHistory });
   setFilteredHistory(geoHistory);

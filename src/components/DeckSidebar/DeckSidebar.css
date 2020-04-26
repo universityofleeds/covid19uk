@@ -37,8 +37,6 @@
 .side-panel {
   padding: 10px;
   width: 320px;
-  /* background-color: #242730;
-  color: #a3a5a8; */
   overflow: auto;
   display: flex;
   flex-direction: column;
