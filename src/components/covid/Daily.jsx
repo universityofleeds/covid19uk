@@ -66,7 +66,8 @@ export default React.memo((props) => {
           [slicedMulti[1], slicedMulti[2]]
         } legend={["DailyCases", "DailyDeaths"]}
         title={"DailyVsDeaths (England)"} 
-        plotStyle={{ height: 200, marginBottom: 10 }}
+        plotStyle={{ height: 170, marginBottom: 10 }} noXAxis={true}
+        crosshair={true}
       />
       
       <MultiLinePlot
@@ -78,7 +79,8 @@ export default React.memo((props) => {
           ]
         } legend={["Cases", increase + "%"]}
         title={"Cases increase % (England):"}
-        plotStyle={{ height: 200, marginBottom:60 }} noLimit={true}
+        plotStyle={{ height: 170, marginBottom:50 }} noLimit={true}
+        crosshair={true}
       />
       {`Total ${days} days: ` + daily[0].date + " to " + daily[days].date}
       <Slider

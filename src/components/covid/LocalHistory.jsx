@@ -1,34 +1,33 @@
 import React, { useState } from 'react';
-// import { format } from 'd3-format';
 import { Checkbox } from 'baseui/checkbox';
-// import { RadioGroup, Radio } from "baseui/radio";
-// import { VerticalBarSeries } from 'react-vis';
-// import { Slider } from 'baseui/slider';
 import { schemeTableau10 } from 'd3-scale-chromatic';
 
 import MultiLinePlot from '../Showcases/MultiLinePlot';
 import MultiSelect from '../MultiSelect';
 import './style.css';
+import CustomSlider from './CustomSlider';
 
 export default React.memo((props) => {
-  // const [shownGeos, setShownGeos] = useState([50]);
   const [checked, setChecked] = useState(false);
-  const [allDates, setAllDates] = useState(false);
+  const [allDates, setAllDates] = useState(true);
 
   const [{ geo, avg, geoHistory }, setData] =
     useState({ geo: null, avg: null, geoHistory: null });
   const [filteredHistory, setFilteredHistory] = useState(null);
 
   const { dark, onSelectCallback, hintXValue, type } = props;
+  // console.log(props.data);
 
   React.useEffect(() => {
-    initialState({data: props.data, setData, setFilteredHistory, 
-      type, allDates});
+    initialState({
+      data: props.data, setData, setFilteredHistory,
+      type, allDates
+    });
   }, [type, allDates])
 
   const measure = type === "countries" ?
     'dailyTotalDeaths' : 'dailyTotalConfirmedCases';
-  
+
   if (filteredHistory) {
     //list history
     let keys = Object.keys(filteredHistory); //.slice(0, shownGeos);
@@ -36,9 +35,16 @@ export default React.memo((props) => {
       filteredHistory.avg = avg;
       keys.push("avg")
     }
+    // console.log(keys, filteredHistory);
 
     return (
       <>
+        <CustomSlider
+          dates={filteredHistory[keys[0]].map(e => e.x)} 
+          callback={(date) => {
+            typeof hintXValue === 'function' &&
+            hintXValue(date)
+          }}/>
         {geo.length > 10 && <MultiSelect
           dark={dark}
           title="Compare"
@@ -65,10 +71,11 @@ export default React.memo((props) => {
           dark={dark}
           data={keys
             .map(e => filteredHistory[e]
-              .slice(filteredHistory[e].length - 35, filteredHistory[e].length))}
+              .slice(type !== "countries" ? filteredHistory[e].length - 35 : 0,
+                filteredHistory[e].length))}
           legend={keys}
-          title={type + ": " + measure + 
-          (type !== "countries" ? " vs avg." : "")}
+          title={type + ": " + measure +
+            (type !== "countries" ? " vs avg." : "")}
           plotStyle={{
             // width: W, 
             marginBottom: 60
@@ -81,49 +88,34 @@ export default React.memo((props) => {
           noLegend={keys.length > 10}
           hintXValue={(xValue) => typeof hintXValue === 'function' &&
             hintXValue(xValue)}
+          crosshair={true}
         />
         {
           type === "countries" ?
-          <Checkbox
-            checked={checked}
-            onChange={e => {
-              setChecked(e.target.checked)
-              if(e.target.checked) {
-                const newFilter = {}
-                Object.keys(geoHistory).forEach(e => {
-                  if(e !== "England") {
-                    newFilter[e] = geoHistory[e];
-                  }
-                });
-                setFilteredHistory(newFilter)
-              } else {
-                setFilteredHistory(geoHistory);
-              }
-            }}
-          >Hide England</Checkbox>
-          :
-          <>
             <Checkbox
+              checked={checked}
+              onChange={e => {
+                setChecked(e.target.checked)
+                if (e.target.checked) {
+                  const newFilter = {}
+                  Object.keys(geoHistory).forEach(e => {
+                    if (e !== "England") {
+                      newFilter[e] = geoHistory[e];
+                    }
+                  });
+                  setFilteredHistory(newFilter)
+                } else {
+                  setFilteredHistory(geoHistory);
+                }
+              }}
+            >Hide England</Checkbox>
+            :
+            type === "utlas" && <Checkbox
               checked={allDates}
-              onChange={e => {              
+              onChange={e => {
                 setAllDates(e.target.checked)
               }}
             >Longest period</Checkbox>
-            {/* {type === 'utlas' && 
-            <>
-              <Slider
-                min={1} 
-                max={geo.length}
-                value={shownGeos}
-                onChange={({ value }) => {
-                  if (value) {
-                    setShownGeos(value);
-                  }
-                }}
-              />
-              Number of local authorities shown.
-            </>}  */}
-          </>
         }
         <hr />
       </>
@@ -134,8 +126,8 @@ export default React.memo((props) => {
 });
 
 function initialState(options) {
-  const {data, setData, setFilteredHistory, 
-    type = "utlas", allDates = false} = options
+  const { data, setData, setFilteredHistory,
+    type = "utlas", allDates } = options
   const geoHistory = {};
   const measure = type === "countries" ?
     'dailyTotalDeaths' : 'dailyTotalConfirmedCases';
@@ -155,19 +147,23 @@ function initialState(options) {
     //go through the rest and add values of same dates
     Object.keys(data[type]).map(e => {
       const cc = data[type][e][measure];
-      if(!geoHistory[data[type][e].name.value]) {
+      if (!geoHistory[data[type][e].name.value]) {
         geoHistory[data[type][e].name.value] = [];
       }
       cc.map(ov => {
         if (utla.name !== data[type][e].name.value) {
           if (ov.date === v.date) {
             y += ov.value;
-            geoHistory[data[type][e].name.value].push({x: v.date, y: ov.value })
+            geoHistory[data[type][e].name.value]
+            .push({ x: v.date, y: ov.value })
           }
         }
       })
     })
-    avg.push({ x: v.date, y: Math.floor(y / Object.keys(data[type]).length) })
+    avg.push({ 
+      x: v.date, 
+      y: Math.floor(y / Object.keys(data[type]).length) 
+    })
   })
   const geo = Object.keys(geoHistory);
 

@@ -2,6 +2,12 @@
   max-width: 800px;
 }
 
+.slider-label {
+  margin-top: 10px;
+  transform: rotate(-45deg);
+	transform-origin: 0 0;
+}
+
 @media only screen and (max-width: 1200px) {
   .world {
     max-width: 90%;

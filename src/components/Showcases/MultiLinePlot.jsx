@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  XYPlot, XAxis, YAxis, LineSeries,
+  XYPlot, XAxis, YAxis, LineSeries, LineMarkSeries,
   Crosshair, DiscreteColorLegend
 } from 'react-vis';
 import { format } from 'd3-format';
@@ -85,6 +85,18 @@ export default function MultiLinePlot(options) {
             style={{ fill: 'none' }}
             data={line} 
             color={colors && colors[i]} />)}
+        {options.crosshair &&
+          <Crosshair
+            color= '#f00'
+            values={[{x:"2020-03-23", y: 1}]}
+            > 
+            <div style={{
+                color: options.dark ? '#fff' : '#000'
+              }}>
+              <b>Lockdown</b>
+            </div>
+          </Crosshair>
+        }
         {hint && 
         <Crosshair
           values={hint}
