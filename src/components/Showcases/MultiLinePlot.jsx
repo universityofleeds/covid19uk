@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  XYPlot, XAxis, YAxis, LineSeries, LineMarkSeries,
+  XYPlot, XAxis, YAxis, LineSeries,
   Crosshair, DiscreteColorLegend
 } from 'react-vis';
 import { format } from 'd3-format';
@@ -56,20 +56,22 @@ export default function MultiLinePlot(options) {
       >
         {!noXAxis && // if provided dont
           <XAxis
-            tickSize={0}
+            // tickSize={0}
             tickFormat={v => shortenName(v, 10)}
             tickValues={[data[0][0].x.replace("2020-", ""), data[0][data[0].length-1].x]}
-            tickLabelAngle={-65} 
+            // tickLabelAngle={-65} 
             style={{
-              line: { strokeWidth: 0 },
+              // line: { strokeWidth: 1 },
               text: { fill: options.dark ? '#fff' : '#000' } 
             }} />}
         {!noYAxis && // if provided dont
           <YAxis
-            tickSize={0}
-            tickLabelAngle={-45} tickFormat={v => format(".2s")(v)} style={{
-              line: { strokeWidth: 0 },
+            // tickSize={0}
+            tickLabelAngle={-45} tickFormat={v => format(".2s")(v)} 
+            style={{
+              // line: { strokeWidth: 0 },
               title: { fill: options.dark ? '#fff' : '#000' },
+              text: { fill: options.dark ? '#fff' : '#000' } 
             }} position="end" />
         }
         {data.map((line, i) =>
@@ -87,7 +89,6 @@ export default function MultiLinePlot(options) {
             color={colors && colors[i]} />)}
         {options.crosshair &&
           <Crosshair
-            color= '#f00'
             values={[{x:"2020-03-23", y: 1}]}
             > 
             <div style={{

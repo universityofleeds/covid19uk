@@ -115,9 +115,10 @@ export default React.memo((props) => {
               onChange={e => {
                 setAllDates(e.target.checked)
               }}
-            >Longest period</Checkbox>
+            >Dates vary (raw figures)</Checkbox>
         }
         <hr />
+        
       </>
     );
   } else {

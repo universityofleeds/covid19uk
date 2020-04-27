@@ -8,7 +8,7 @@ function CustomTicks(props) {
 
   React.useEffect(() => {
     setDates(getDates());
-    setValue([props.dates.length-1]);
+    setValue([props.dates.length-1]);    
   }, [props.dates.length])
   
   if(!dates) return null;

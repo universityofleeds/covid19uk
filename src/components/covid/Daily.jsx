@@ -79,7 +79,7 @@ export default React.memo((props) => {
           ]
         } legend={["Cases", increase + "%"]}
         title={"Cases increase % (England):"}
-        plotStyle={{ height: 170, marginBottom:50 }} noLimit={true}
+        plotStyle={{ height: 170, marginBottom:10 }} noLimit={true}
         crosshair={true}
       />
       {`Total ${days} days: ` + daily[0].date + " to " + daily[days].date}

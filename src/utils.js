@@ -9,6 +9,7 @@ import {
   interpolateOrRd, // schemeBlues
 } from 'd3-scale-chromatic';
 import qs from 'qs'; // warning: importing it otherways would cause minificatino issue.
+import html2canvas from 'html2canvas';
 
 import mapping from './location-icon-mapping.json';
 import Constants from './Constants';
@@ -736,6 +737,17 @@ const useFetch = (url) => {
   return [data, loading];
 }
 
+const downloadPNG = (e) => {
+  if(!e) return;
+  html2canvas(e).then((canvas) => {
+    // console.log(canvas.toDataURL());
+    const a = document.createElement("a");
+    a.href = canvas.toDataURL();
+    a.setAttribute("download", "graph.png");
+    a.click();
+  });  
+}
+
 export {
   getResultsFromGoogleMaps,
   xyObjectFromKeyValue,
@@ -753,6 +765,7 @@ export {
   getCentroid,
   shortenName,
   colorRanges,
+  downloadPNG,
   percentDiv,
   iconJSType,
   colorScale,
