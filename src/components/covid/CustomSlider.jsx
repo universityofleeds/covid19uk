@@ -4,8 +4,13 @@ import {Slider} from 'baseui/slider';
 function CustomTicks(props) {
   const {callback} = props;
   const [value, setValue] = React.useState([props.dates.length-1]);
-  const [dates] = React.useState(props.dates && 
-    props.dates.map(e => e.replace("2020-", "")));
+  const [dates, setDates] = React.useState(getDates());
+
+  React.useEffect(() => {
+    setDates(getDates());
+    setValue([props.dates.length-1]);
+  }, [props.dates.length])
+  
   if(!dates) return null;
 
   return (
@@ -29,13 +34,13 @@ function CustomTicks(props) {
             style={{
               position: 'absolute',
               top:-20,
-              width: 50,
+              width: 80,
               // top: `-${theme.sizing.scale800}`,
               // ...theme.typography.font200,
               backgroundColor: 'transparent',
             }}
           >
-            {dates[$value]}
+            On {dates[$value]}
           </div>
         ),
         TickBar: ({$min, $max}) => (
@@ -58,5 +63,10 @@ function CustomTicks(props) {
       }}
     />
   );
+
+  function getDates() {
+    return props.dates &&
+      props.dates.map(e => e.replace("2020-", ""));
+  }
 }
 export default CustomTicks;

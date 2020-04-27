@@ -8,6 +8,11 @@
 	transform-origin: 0 0;
 }
 
+.crosshair {
+  overflow: hidden;
+  max-height: 200px;
+}
+
 @media only screen and (max-width: 1200px) {
   .world {
     max-width: 90%;
