@@ -106,14 +106,11 @@
   margin-top: -8px;
   vertical-align: middle;
 }
+
 .navbar-nav > .themebutton > a,
 .navbar-nav > .ghbutton > a {
   padding-top: 15px;
   padding-bottom: 10px;
-}
-
-.navbar {
-  max-height: 50px;
 }
 
 @media only screen and (max-width: 770px) {
