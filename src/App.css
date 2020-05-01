@@ -1,3 +1,15 @@
+/**
+*
+* Document an important aspect of Mapbox.
+* The issue is that mapbox controls assign all
+* pointer events with "non" and need to
+* reassign when we want to takee control
+* from the underlying map.
+*/
+.bottom-panel {
+  pointer-events: auto;
+}
+
 @media (min-width: 768px) {
   .navbar {
     border-radius: 0;

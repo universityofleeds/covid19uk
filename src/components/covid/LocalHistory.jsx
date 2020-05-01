@@ -15,7 +15,8 @@ export default React.memo((props) => {
     useState({ geo: null, avg: null, geoHistory: null });
   const [filteredHistory, setFilteredHistory] = useState(null);
 
-  const { dark, onSelectCallback, hintXValue, type } = props;
+  const { dark, onSelectCallback, hintXValue, 
+    type } = props;
   // console.log(props.data);
 
   React.useEffect(() => {
@@ -71,7 +72,7 @@ export default React.memo((props) => {
           dark={dark}
           data={keys
             .map(e => filteredHistory[e]
-              .slice(type !== "countries" ? filteredHistory[e].length - 35 : 0,
+              .slice(type !== "countries" ? filteredHistory[e].length - 40 : 0,
                 filteredHistory[e].length))}
           legend={keys}
           title={type + ": " + measure +

@@ -122,7 +122,8 @@ export default class Welcome extends React.Component {
       colourName: 'inverseDefault',
       iconLimit: 500,
       legend: false,
-      datasetName: defualtURL
+      datasetName: defualtURL,
+      bottomPanel: false,
     }
     this._generateLayer = this._generateLayer.bind(this)
     this._renderTooltip = this._renderTooltip.bind(this);
@@ -451,7 +452,7 @@ export default class Welcome extends React.Component {
 
   render() {
     const { tooltip, viewport, initialViewState,
-      loading, mapStyle, alert,
+      loading, mapStyle, alert, bottomPanel,
       layerStyle, geomType, legend, coords } = this.state;
     // console.log(geomType, legend);
 
@@ -591,17 +592,30 @@ export default class Welcome extends React.Component {
             this._fitViewport(bboxLonLat)
           }}
           showLegend={(legend) => this.setState({ legend })}
+          showBottomPanel={(bottomPanel) => this.setState({bottomPanel})}
           datasetName={this.state.datasetName}
         />
-        {
-          legend && (geomType === 'polygon' ||
-            geomType === 'multipolygon') &&
-          <div 
-            style={{textAlign: 'center', marginBottom: 45}}
-            className="right-side-panel mapbox-legend">
-            {legend}
-          </div>
-        }
+        <div className="mapboxgl-control-container">
+          {
+            legend && (geomType === 'polygon' ||
+              geomType === 'multipolygon') &&
+            <div 
+              style={{textAlign: 'center', 
+              marginBottom: 45}}
+              className="mapboxgl-ctrl-bottom-right mapbox-legend">
+              {legend}
+            </div>
+          }
+          { bottomPanel &&
+            <div 
+              style={{textAlign: 'center', 
+              marginRight: 100,
+              marginBottom: 45}}
+              className="mapboxgl-ctrl-bottom-right mapbox-legend bottom-panel">
+                {bottomPanel}
+            </div> 
+          }
+        </div>
       </div>
     );
   }

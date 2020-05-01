@@ -213,6 +213,7 @@ export default class DeckSidebar extends React.Component {
               {historyData && !datasetName.endsWith("covid19w") &&
               <LocalHistory data={historyData} dark={dark} 
               type={type}
+              showBottomPanel={this.props.showBottomPanel}
               onSelectCallback={(selected) => {
                 // array of seingle {id: , value: } object
                 if (selected[0]) {
