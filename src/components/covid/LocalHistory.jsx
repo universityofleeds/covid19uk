@@ -10,24 +10,25 @@ import CustomSlider from './CustomSlider';
 export default React.memo((props) => {
   const [checked, setChecked] = useState(false);
   const [allDates, setAllDates] = useState(true);
+  const [total, setTotal] = useState(false);
 
   const [{ geo, avg, geoHistory }, setData] =
     useState({ geo: null, avg: null, geoHistory: null });
   const [filteredHistory, setFilteredHistory] = useState(null);
 
   const { dark, onSelectCallback, hintXValue, 
-    type } = props;
+    type, totalCases = total } = props;
   // console.log(props.data);
+
+  const measure = type === "countries" ?
+  'dailyTotalDeaths' : totalCases ? 'dailyConfirmedCases' : 'dailyTotalConfirmedCases';
 
   React.useEffect(() => {
     initialState({
       data: props.data, setData, setFilteredHistory,
-      type, allDates
+      type, allDates, measure
     });
-  }, [type, allDates])
-
-  const measure = type === "countries" ?
-    'dailyTotalDeaths' : 'dailyTotalConfirmedCases';
+  }, [type, totalCases, allDates])
 
   if (filteredHistory) {
     //list history
@@ -111,12 +112,21 @@ export default React.memo((props) => {
               }}
             >Hide England</Checkbox>
             :
-            type === "utlas" && <Checkbox
-              checked={allDates}
-              onChange={e => {
-                setAllDates(e.target.checked)
-              }}
-            >Dates vary (raw figures)</Checkbox>
+            type === "utlas" && 
+            <>
+              <Checkbox
+                checked={allDates}
+                onChange={e => {
+                  setAllDates(e.target.checked)
+                }}
+              >Dates vary (raw figures)</Checkbox>
+              <Checkbox
+                checked={total}
+                onChange={e => {
+                  setTotal(e.target.checked)
+                }}
+              >Daily cases</Checkbox>
+            </>
         }
         <hr />
         
@@ -129,10 +139,8 @@ export default React.memo((props) => {
 
 function initialState(options) {
   const { data, setData, setFilteredHistory,
-    type = "utlas", allDates } = options
+    type = "utlas", allDates, measure } = options
   const geoHistory = {};
-  const measure = type === "countries" ?
-    'dailyTotalDeaths' : 'dailyTotalConfirmedCases';
   //add average
   const avg = []; let m = allDates ? 0 : 1e10, utla;
   // find longest/shortest
@@ -159,6 +167,9 @@ function initialState(options) {
             geoHistory[data[type][e].name.value]
             .push({ x: v.date, y: ov.value })
           }
+        } else {
+          geoHistory[data[type][e].name.value]
+            .push({ x: ov.date, y: ov.value })
         }
       })
     })

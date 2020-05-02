@@ -81,7 +81,7 @@ export default function MultiLinePlot(options) {
             onNearestX={(_, { index }) => {
               setHint(data.map(d => d[index]))
               // console.log(data[0][index].x);
-              typeof hintXValue === 'function' &&
+              typeof hintXValue === 'function' && data[0] && data[0][index] && 
               hintXValue(data[0][index].x)
             }}
             style={{ fill: 'none' }}
