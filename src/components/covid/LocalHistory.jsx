@@ -7,13 +7,16 @@ import MultiSelect from '../MultiSelect';
 import './style.css';
 import CustomSlider from './CustomSlider';
 import BottomPanel from './BottomPanel';
+// import REChartsMultiLine from '../Showcases/REChartsMultiLine';
 
 export default React.memo((props) => {
   const [checked, setChecked] = useState(false);
-  const [allDates, setAllDates] = useState(true);
+  const [allDates, setAllDates] = useState(false);
   const [total, setTotal] = useState(false);
 
-  const [{ geo, avg, geoHistory }, setData] =
+  const [{ geo, avg, geoHistory, 
+    // rechartsData 
+  }, setData] =
     useState({ geo: null, avg: null, geoHistory: null });
   const [filteredHistory, setFilteredHistory] = useState(null);
 
@@ -75,6 +78,9 @@ export default React.memo((props) => {
           }}
         // single={true}
         />}
+        {/* <REChartsMultiLine 
+        history={rechartsData} keys={keys}
+        /> */}
         <MultiLinePlot
           dark={dark}
           data={keys
@@ -148,18 +154,23 @@ function initialState(options) {
     type = "utlas", allDates, measure } = options
   const geoHistory = {};
   //add average
-  const avg = []; let m = allDates ? 0 : 1e10, utla;
+  const avg = []; let m = allDates ? 0 : 1e10, utla, name;
   // find longest/shortest
   Object.keys(data[type]).map(e => {
     const cc = data[type][e][measure];
     if (cc && (allDates ? cc.length > m : cc.length < m)) {
-      m = cc.length; utla = data[type][e];
+      m = cc.length; utla = data[type][e]; name = data[type][e].name.value;
     }
   })
 
+  //add Rechart style object
+  const rechartsData = []
   utla[measure].map(v => {
     //e.date, e.value
     let y = v.value;
+    const row = {}
+    row.date = v.date;
+    row[name] = y;
     //go through the rest and add values of same dates
     Object.keys(data[type]).map(e => {
       const cc = data[type][e][measure];
@@ -172,6 +183,7 @@ function initialState(options) {
             y += ov.value;
             geoHistory[data[type][e].name.value]
             .push({ x: v.date, y: ov.value })
+            row[data[type][e].name.value] = ov.value;
           }
         } else {
           geoHistory[data[type][e].name.value]
@@ -183,9 +195,10 @@ function initialState(options) {
       x: v.date, 
       y: Math.floor(y / Object.keys(data[type]).length) 
     })
+    rechartsData.push(row)
   })
   const geo = Object.keys(geoHistory);
 
-  setData({ geo, avg, geoHistory });
+  setData({ geo, avg, geoHistory, rechartsData });
   setFilteredHistory(geoHistory);
 }
