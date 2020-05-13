@@ -6,6 +6,7 @@ import MultiLinePlot from '../Showcases/MultiLinePlot';
 import MultiSelect from '../MultiSelect';
 import './style.css';
 import CustomSlider from './CustomSlider';
+import BottomPanel from './BottomPanel';
 
 export default React.memo((props) => {
   const [checked, setChecked] = useState(false);
@@ -17,7 +18,7 @@ export default React.memo((props) => {
   const [filteredHistory, setFilteredHistory] = useState(null);
 
   const { dark, onSelectCallback, hintXValue, 
-    type, totalCases = total } = props;
+    type, totalCases = total, showBottomPanel } = props;
   // console.log(props.data);
 
   const measure = type === "countries" ?
@@ -28,6 +29,11 @@ export default React.memo((props) => {
       data: props.data, setData, setFilteredHistory,
       type, allDates, measure
     });
+    typeof showBottomPanel === 'function' &&
+    showBottomPanel(<BottomPanel 
+      history={
+        props.data.rates.countries.E92000001.dailyConfirmedCasesByPop
+    }/>)
   }, [type, totalCases, allDates])
 
   if (filteredHistory) {
