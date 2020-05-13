@@ -7,13 +7,12 @@ import {
 import './DeckSidebar.css';
 import MapboxBaseLayers from '../MapboxBaseLayers';
 import {
-  xyObjectByProperty, percentDiv,
+  xyObjectByProperty,
   searchNominatom,
   humanize, generateLegend, sortNumericArray
 } from '../../utils';
 import Variables from '../Variables';
 import RBAlert from '../RBAlert';
-import { propertyCount } from '../../geojsonutils';
 import { LAYERSTYLES, LIDA } from '../../Constants';
 import ColorPicker from '../ColourPicker';
 import Modal from '../Modal';
@@ -28,7 +27,6 @@ import WorldDaily from '../covid/WorldDaily';
 import SwitchData from '../covid/SwitchData';
 
 import LocalHistory from '../covid/LocalHistory';
-import { getLatestBlobFromPHE } from '../covid/utils';
 
 export default class DeckSidebar extends React.Component {
   constructor(props) {
@@ -81,7 +79,6 @@ export default class DeckSidebar extends React.Component {
     let plot_data_multi = [[], []];
     const notEmpty = data && data.length > 1;
     plot_data = crashes_plot_data(notEmpty, data, plot_data, plot_data_multi);
-    const severity_data = propertyCount(data, "accident_severity");
     let columnDomain = [];
     const columnData = notEmpty ?
       xyObjectByProperty(data, column || barChartVariable) : [];
@@ -144,7 +141,7 @@ export default class DeckSidebar extends React.Component {
                 (historyData && historyData.overview && !datasetName.endsWith("covid19w")) ?
                 <>
                   {
-                    historyData.overview.K02000001.totalCases.value + " cases, "                    
+                    historyData.overview.K02000001.newCases.value + " new cases, "                    
                   }
                   <span style={{color: "red"}}>
                     {
@@ -161,6 +158,14 @@ export default class DeckSidebar extends React.Component {
                     : "Nothing to show"
             }
             </h4>
+            {
+              (historyData && historyData.overview && !datasetName.endsWith("covid19w")) &&
+              <h6>
+                {
+                  historyData.overview.K02000001.totalCases.value + " UK total cases"
+                }
+              </h6>
+            }
           </div>
           <div>
             {historyData && historyData.overview && !datasetName.endsWith("covid19w") && 
@@ -194,21 +199,6 @@ export default class DeckSidebar extends React.Component {
                 })
               }
               {/* TODO: generate this declaritively too */}
-              {
-                severity_data && severity_data.map(each =>
-                  percentDiv(each.x, 100 * each.y / data.length, () => {
-                    if (multiVarSelect && multiVarSelect['accident_severity'] &&
-                      multiVarSelect['accident_severity'].has(each.x)) {
-                      delete multiVarSelect['accident_severity'];
-                    } else {
-                      multiVarSelect['accident_severity'] = new Set([each.x]);
-                      this.setState({ multiVarSelect })
-                    }
-                    onSelectCallback &&
-                      onSelectCallback(Object.keys(multiVarSelect).length === 0 ?
-                        { what: '' } : { what: 'multi', selected: multiVarSelect })
-                  }, dark))
-              }
               <hr style={{ clear: 'both' }} />
               {historyData && !datasetName.endsWith("covid19w") &&
               <LocalHistory data={historyData} dark={dark} 
@@ -371,6 +361,14 @@ export default class DeckSidebar extends React.Component {
                 </InputGroup>
               </FormGroup>
             </form>
+            <h4>
+              LIDA Disclaimer:
+              Please see section 2 of the Disclaimer and 
+              limitation of liability of University of Leeds 
+              &nbsp;<a href="http://www.leeds.ac.uk/termsandconditions">here</a>
+            </h4>
+            <h5>PHE and World data are pulled from 
+              their respective servers.</h5>
             <img src={LIDA} alt="LIDA logo" />
           </div>
         </div>

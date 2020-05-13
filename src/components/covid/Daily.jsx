@@ -11,7 +11,7 @@ export default React.memo((props) => {
   const [start, setStart] = useState(20);
   const [end, setEnd] = useState(days + 1);
   const [value, setValue] = useState([days - 30, days]);
-  const [increase, setIncrease] = useState([15]);
+  const [increase, setIncrease] = useState([11.5]);
 
   let sliced = daily.slice(0, days);
   let testsSliced = tests.slice(0, days)

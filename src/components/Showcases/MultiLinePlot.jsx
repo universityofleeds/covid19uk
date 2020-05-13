@@ -31,14 +31,21 @@ export default function MultiLinePlot(options) {
 
   const { plotStyle, title, noXAxis, noYAxis,
     onValueClick, data, legend, colors, noLegend, hintXValue } = options;
-  return options.data && options.data.length > 0 &&
+  
+  let includesLockdown = false;
+  data[0].forEach(e => {
+    if(e.x === "2020-03-23") {
+      includesLockdown = true;
+    }
+  })
+  return data && data.length > 0 &&
     // https://github.com/uber/react-vis/issues/584#issuecomment-401693372
     <div className="unselectable" 
       style={{ 
         position: 'relative', 
       }}>
       {!options.noLimit &&
-        options.data && options.data.length > limit &&
+        data && data.length > limit &&
         <h4>Plotting first {limit} values:</h4>}
       {title &&
         <h4>{title}</h4>
@@ -87,7 +94,7 @@ export default function MultiLinePlot(options) {
             style={{ fill: 'none' }}
             data={line} 
             color={colors && colors[i]} />)}
-        {options.crosshair &&
+        {options.crosshair && includesLockdown &&
           <Crosshair
             values={[{x:"2020-03-23", y: 1}]}
             > 
@@ -114,6 +121,7 @@ export default function MultiLinePlot(options) {
               ((hint[i] && hint[i].y) || "") + " ") :
               "Total: " + hint.reduce((total, next) => isNumber(total) ?
               total + (next ? next.y : 0) : (total ? total.y : 0) + (next ? next.y : 0))
+              .toFixed(2)
             }
           </div>
         </Crosshair>}

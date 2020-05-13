@@ -108,7 +108,7 @@ export default class Welcome extends React.Component {
     }
 
     this.state = {
-      column: 'totalCases',
+      column: 'totalCasesByPop',
       loading: true,
       layers: [],
       backgroundImage: gradient.backgroundImage,
@@ -606,7 +606,7 @@ export default class Welcome extends React.Component {
               {legend}
             </div>
           }
-          { bottomPanel &&
+          { bottomPanel && !this.state.datasetName.endsWith("covid19w") &&
             <div 
               style={{textAlign: 'center', 
               marginRight: 100,

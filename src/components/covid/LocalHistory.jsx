@@ -25,11 +25,11 @@ export default React.memo((props) => {
   // console.log(props.data);
 
   const measure = type === "countries" ?
-  'dailyTotalDeaths' : totalCases ? 'dailyConfirmedCases' : 'dailyTotalConfirmedCases';
+  'dailyTotalDeathsByPop' : totalCases ? 'dailyConfirmedCasesByPop' : 'dailyTotalConfirmedCasesByPop';
 
   React.useEffect(() => {
     initialState({
-      data: props.data, setData, setFilteredHistory,
+      data: props.data.rates, setData, setFilteredHistory,
       type, allDates, measure
     });
     typeof showBottomPanel === 'function' &&
@@ -50,6 +50,7 @@ export default React.memo((props) => {
 
     return (
       <>
+        Infection rates history:
         <CustomSlider
           dates={filteredHistory[keys[0]].map(e => e.x)} 
           callback={(date) => {

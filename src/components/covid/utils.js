@@ -5,6 +5,10 @@ import { isArray } from "../../JSUtils";
 
 const pop = [55977178, 1881641, 5438100,3138631]
 
+const numberWithCommas = (x) => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 const countryHistory = (data, by = "cases", min = 200, max=500, 
 list) => {
   if(!data || data.length === 0) return null;
@@ -89,8 +93,8 @@ const generateMultipolygonGeojsonFrom = (geometries, properties, callback) => {
     callback(collection)
 }
 
-const assembleGeojsonFrom = (geojson, phe, date, type = "utlas") => {
-  if(!geojson || !phe || !geojson.features ||
+const assembleGeojsonFrom = (geojson, history, date, type = "utlas") => {
+  if(!geojson || !history || !geojson.features ||
     !isArray(geojson.features) ||
     !geojson.features.length) return;
   const gj = {
@@ -98,27 +102,34 @@ const assembleGeojsonFrom = (geojson, phe, date, type = "utlas") => {
     features: []
   };
   const measure = type === "countries" ?
-    'dailyTotalDeaths' : 'dailyTotalConfirmedCases';
+  'dailyTotalDeathsByPop' : 'dailyConfirmedCasesByPop';
+
   geojson.features.forEach(f => {
-    Object.keys(phe[type]).forEach(each => {
+    Object.keys(history.rates[type]).forEach(each => {      
       if(f.properties.ctyua19cd === each || 
         f.properties.ctry19cd === each ||
         f.properties.rgn18cd === each) {
-        let totalCases = phe[type][each].totalCases.value;
+        let totalCasesByPop = history.rates[type][each].totalCasesByPop.value;
         if(date) {
-          phe[type][each][measure].forEach(e => {   
+          history.rates[type][each][measure].forEach(e => {   
             if(e.date === date) {
-              totalCases = e.value
+              totalCasesByPop = e.value
             }
           })
         }
         const feature = {type: "Feature"};
-        // gj.features[i].properties = phe[each];
+        // gj.features[i].properties = history[each];
         feature.geometry = f.geometry;
         feature.properties = {
           ctyua19cd: each,
-          name: phe[type][each].name.value,
-          totalCases: totalCases
+          name: history.rates[type][each].name.value,
+          totalCasesByPop
+        }
+        if(type !== 'countries') {
+          feature.properties.totalCases = 
+          history[type][each].totalCases.value
+          feature.properties.population = 
+          numberWithCommas(history.rates[type][each].population.value)
         }
         if(date) {
           feature.properties.date = date;
