@@ -125,7 +125,8 @@ const assembleGeojsonFrom = (geojson, history, date, type = "utlas") => {
           name: history.rates[type][each].name.value,
           totalCasesByPop
         }
-        if(type !== 'countries') {
+        if(history[type][each].totalCases &&
+          history.rates[type][each].population) {
           feature.properties.totalCases = 
           history[type][each].totalCases.value
           feature.properties.population = 

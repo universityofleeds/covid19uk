@@ -52,7 +52,7 @@ export default React.memo((props) => {
       <>
         Infection rates history:
         <CustomSlider
-          dates={filteredHistory[keys[0]].map(e => e.x)} 
+          dates={filteredHistory[keys[1]].map(e => e.x)} 
           callback={(date) => {
             typeof hintXValue === 'function' &&
             hintXValue(date)

@@ -54,7 +54,7 @@ export default class DeckSidebar extends React.Component {
       loading !== nextProps.loading ||
       barChartVariable !== nextState.barChartVariable ||
       datasetName !== nextProps.datasetName ||
-      tests !== nextProps.tests||
+      tests !== nextProps.tests ||
       historyData !== nextProps.historyData) return true;
     //TODO:  a more functional way is needed        
     if (data && nextProps && nextProps.data &&
@@ -69,11 +69,11 @@ export default class DeckSidebar extends React.Component {
    * Partly because we like to load from a URL.
    */
   render() {
-    const { year, datasetName, 
+    const { year, datasetName,
       multiVarSelect, barChartVariable } = this.state;
     const {
       onSelectCallback, data, colourCallback, tests, historyData,
-      urlCallback, alert, onlocationChange, column, dark, 
+      urlCallback, alert, onlocationChange, column, dark,
       toggleOpen } = this.props;
     let plot_data = [];
     let plot_data_multi = [[], []];
@@ -84,8 +84,8 @@ export default class DeckSidebar extends React.Component {
       xyObjectByProperty(data, column || barChartVariable) : [];
     const geomType = notEmpty && data[0].geometry.type.toLowerCase();
     // console.log(regions);
-    const type = datasetName.split("/")[datasetName.split("/").length-1]
-    .replace(".geojson", "");
+    const type = datasetName.split("/")[datasetName.split("/").length - 1]
+      .replace(".geojson", "");
     if (notEmpty && column && (geomType === 'polygon' ||
       geomType === 'multipolygon' || "linestring") &&
       isNumber(data[0].properties[column])) {
@@ -129,34 +129,34 @@ export default class DeckSidebar extends React.Component {
             }}
             className="side-pane-header">
             <h4>
-            {
-              //if specific region shown, show its count
-              multiVarSelect.name && multiVarSelect.name.size === 1 ?
+              {
+                //if specific region shown, show its count
+                multiVarSelect.name && multiVarSelect.name.size === 1 ?
                   data[0].properties.totalCases + " cases"
-                : multiVarSelect.name && multiVarSelect.name.size > 1 ?
-                data.reduce((t, next) =>
+                  : multiVarSelect.name && multiVarSelect.name.size > 1 ?
+                    data.reduce((t, next) =>
                       isNumber(t) ? t + +(next.properties.totalCases) :
                         +(t.properties.totalCases) + +(next.properties.totalCases)) + " cases"
-                :
-                (historyData && historyData.overview && !datasetName.endsWith("covid19w")) ?
-                <>
-                  {
-                    historyData.overview.K02000001.newCases.value + " new cases, "                    
-                  }
-                  <span style={{color: "red"}}>
-                    {
-                      historyData.overview.K02000001.deaths.value + " deaths"
-                    }
-                  </span>
-                </>
-                :
-                data && data.length ?
-                    data && data.length && data[0].properties.cases &&
-                    data.reduce((t, next) =>
-                      isNumber(t) ? t + +(next.properties.cases) :
-                        +(t.properties.cases) + +(next.properties.cases)) + " cases"
-                    : "Nothing to show"
-            }
+                    :
+                    (historyData && historyData.overview && !datasetName.endsWith("covid19w")) ?
+                      <>
+                        {
+                          historyData.overview.K02000001.newCases.value + " new cases, "
+                        }
+                        <span style={{ color: "red" }}>
+                          {
+                            historyData.overview.K02000001.deaths.value + " deaths"
+                          }
+                        </span>
+                      </>
+                      :
+                      data && data.length ?
+                        data && data.length && data[0].properties.cases &&
+                        data.reduce((t, next) =>
+                          isNumber(t) ? t + +(next.properties.cases) :
+                            +(t.properties.cases) + +(next.properties.cases)) + " cases"
+                        : "Nothing to show"
+              }
             </h4>
             {
               (historyData && historyData.overview && !datasetName.endsWith("covid19w")) &&
@@ -168,15 +168,15 @@ export default class DeckSidebar extends React.Component {
             }
           </div>
           <div>
-            {historyData && historyData.overview && !datasetName.endsWith("covid19w") && 
-            `updated: ${new Date(historyData.lastUpdatedAt).toLocaleDateString()}, `}
+            {historyData && historyData.overview && !datasetName.endsWith("covid19w") &&
+              `updated: ${new Date(historyData.lastUpdatedAt).toLocaleDateString()}, `}
             {/* data */}
-            data from {datasetName.endsWith("covid19w") ? 
-            <a href="https://www.ecdc.europa.eu/en/geographical-distribution-2019-ncov-cases">ECDC</a> :
-            <a href="https://coronavirus.data.gov.uk/">PHE</a>} 
+            data from {datasetName.endsWith("covid19w") ?
+              <a href="https://www.ecdc.europa.eu/en/geographical-distribution-2019-ncov-cases">ECDC</a> :
+              <a href="https://coronavirus.data.gov.uk/">PHE</a>}
             <br />
             <SwitchData onSelectCallback={(url) => {
-              if(datasetName === url || 
+              if (datasetName === url ||
                 datasetName.endsWith(url)) return;
               resetState(url);
               typeof (urlCallback) === 'function'
@@ -201,48 +201,48 @@ export default class DeckSidebar extends React.Component {
               {/* TODO: generate this declaritively too */}
               <hr style={{ clear: 'both' }} />
               {historyData && !datasetName.endsWith("covid19w") &&
-              <LocalHistory data={historyData} dark={dark} 
-              type={type}
-              showBottomPanel={this.props.showBottomPanel}
-              onSelectCallback={(selected) => {
-                // array of seingle {id: , value: } object
-                if (selected[0]) {
-                  multiVarSelect['name'] = new Set(selected.map(e => e.id))
-                } else {
-                  if (multiVarSelect.name) delete multiVarSelect.name;
-                }
-                this.setState({
-                  multiVarSelect
-                })
-                typeof onSelectCallback === 'function' &&
-                  onSelectCallback({
-                    what: 'multi',
-                    selected: multiVarSelect
-                  });
-              }} 
-              hintXValue={(xValue) => {
-                // update map on crosshair xvalue
-                if(typeof onSelectCallback === 'function' &&
-                xValue !== this.state.xValue) {
-                  onSelectCallback({
-                    what: 'multi',
-                    hint: xValue,
-                    selected: multiVarSelect
-                  });
-                  this.setState({xValue})
-                }
-              }}/> }
+                <LocalHistory data={historyData} dark={dark}
+                  type={type}
+                  showBottomPanel={this.props.showBottomPanel}
+                  onSelectCallback={(selected) => {
+                    // array of seingle {id: , value: } object
+                    if (selected[0]) {
+                      multiVarSelect['name'] = new Set(selected.map(e => e.id))
+                    } else {
+                      if (multiVarSelect.name) delete multiVarSelect.name;
+                    }
+                    this.setState({
+                      multiVarSelect
+                    })
+                    typeof onSelectCallback === 'function' &&
+                      onSelectCallback({
+                        what: 'multi',
+                        selected: multiVarSelect
+                      });
+                  }}
+                  hintXValue={(xValue) => {
+                    // update map on crosshair xvalue
+                    if (typeof onSelectCallback === 'function' &&
+                      xValue !== this.state.xValue) {
+                      onSelectCallback({
+                        what: 'multi',
+                        hint: xValue,
+                        selected: multiVarSelect
+                      });
+                      this.setState({ xValue })
+                    }
+                  }} />}
               {historyData && tests && !datasetName.endsWith("covid19w") &&
                 <Daily data={historyData.countries.E92000001} tests={tests} dark={dark} />}
               {notEmpty && datasetName.endsWith("covid19w") &&
-                <WorldDaily data={data} dark={dark} 
-                  // onSelectCallback={(selected) => {
-                  //   typeof onSelectCallback === 'function' &&
-                  //     onSelectCallback({
-                  //       what: selected ? 'multi' : '',
-                  //       selected: {countryterritoryCode: new Set([selected])}
-                  //     });
-                  // }}
+                <WorldDaily data={data} dark={dark}
+                // onSelectCallback={(selected) => {
+                //   typeof onSelectCallback === 'function' &&
+                //     onSelectCallback({
+                //       what: selected ? 'multi' : '',
+                //       selected: {countryterritoryCode: new Set([selected])}
+                //     });
+                // }}
                 />
               }
               <Tabs defaultActiveKey={"1"} id="main-tabs">
@@ -363,11 +363,11 @@ export default class DeckSidebar extends React.Component {
             </form>
             <h4>
               LIDA Disclaimer:
-              Please see section 2 of the Disclaimer and 
-              limitation of liability of University of Leeds 
+              Please see section 2 of the Disclaimer and
+              limitation of liability of University of Leeds
               &nbsp;<a href="http://www.leeds.ac.uk/termsandconditions">here</a>
             </h4>
-            <h5>PHE and World data are pulled from 
+            <h5>PHE and World data are pulled from
               their respective servers.</h5>
             <img src={LIDA} alt="LIDA logo" />
           </div>
