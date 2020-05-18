@@ -6,9 +6,9 @@ import { DEV_URL, PRD_URL } from '../../Constants';
 const host = (process.env.NODE_ENV === 'development' ? DEV_URL : PRD_URL);
 
 const urls = {
-  LA:  'https://c19pub.azureedge.net/utlas.geojson',
-  RE: 'https://c19pub.azureedge.net/regions.geojson',
-  UK:'https://c19pub.azureedge.net/countries.geojson',
+  LA:  'https://c19pub.azureedge.net/assets/geo/utlas.geojson',
+  RE: 'https://c19pub.azureedge.net/assets/geo/regions.geojson',
+  UK:'https://c19pub.azureedge.net/assets/geo/countries.geojson',
   World: host + '/api/covid19w'
 }
 export default (props) => {

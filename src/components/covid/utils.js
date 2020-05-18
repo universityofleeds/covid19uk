@@ -2,6 +2,7 @@ import * as helpers from '@turf/helpers';
 import xmlToJSON from 'xmltojson';
 
 import { isArray } from "../../JSUtils";
+import { fetchData } from '../../utils';
 
 const pop = [55977178, 1881641, 5438100,3138631]
 
@@ -122,7 +123,7 @@ const assembleGeojsonFrom = (geojson, history, date, type = "utlas") => {
         feature.geometry = f.geometry;
         feature.properties = {
           ctyua19cd: each,
-          name: history.rates[type][each].name.value,
+          name: history[type][each].name.value,
           totalCasesByPop
         }
         if(history[type][each].totalCases &&
@@ -141,6 +142,35 @@ const assembleGeojsonFrom = (geojson, history, date, type = "utlas") => {
   })
   return(gj);
 }
+const getLatestBlobFromPHENew = (callback) => {  
+  const cdn = "https://c19downloads.azureedge.net/downloads/data/"
+  // https://c19pub.azureedge.net/assets/population/population.json
+  fetchData(cdn + "utlas_latest.json", (utlas, e) => {
+    !e && fetchData(cdn + "ltlas_latest.json", (ltlas, ee) => {
+      !ee && fetchData(cdn + "countries_latest.json", (countries, eee) => {
+        !eee && fetchData(cdn + "landing.json", (landing, eeee) => {
+          !eeee && fetchData(cdn + "regions_latest.json", (regions, eeeee) => {
+            !eeeee && fetchData(
+              "https://c19pub.azureedge.net/assets/population/population.json", 
+              (population, error) => {
+              if(!error) {
+                const data = Object.assign(landing, {utlas: utlas}, 
+                  {ltlas: ltlas}, {countries: countries}, {pop: population},
+                  {regions: regions});
+                // add rates
+                // console.log(data);
+                const rates = generateRates(data, population);
+                // console.log(rates);
+                typeof callback === 'function' &&
+                callback(Object.assign(data, {rates: rates}))
+              }
+            })
+          })
+        })        
+      })
+    })    
+  })
+}
 const getLatestBlobFromPHE = (callback) => {
   fetch('https://publicdashacc.blob.core.windows.net/publicdata?restype=container&comp=list') 
   .then((response) => response.text())
@@ -150,6 +180,8 @@ const getLatestBlobFromPHE = (callback) => {
     const blobList = jsonData.EnumerationResults[0].Blobs[0].Blob;
 
     const getBlobDate = b => new Date(b.Properties[0]['Last-Modified'][0]._text);
+    console.log(getBlobDate());
+    
     const mostRecentBlob = blobList.reduce((acc, cur) => {
       if (!cur.Name[0]._text.startsWith('data_')) {
         return acc;
@@ -170,9 +202,45 @@ const getLatestBlobFromPHE = (callback) => {
  
 export {
   generateMultipolygonGeojsonFrom,
+  getLatestBlobFromPHENew,
   getLatestBlobFromPHE,
   assembleGeojsonFrom,
   countryHistory,
   breakdown,
   daysDiff
+}
+
+function generateRates(data, population) {
+  const rates = {};
+  ['utlas', 'ltlas', 'countries', 'regions'].forEach(area => {
+    rates[area] = {}
+    Object.keys(data[area]).forEach(code => {      
+      if (population[code] && code !== 'metadata') {
+        rates[area][code] = {}
+        rates[area][code].totalCasesByPop = {
+          value: (data[area][code].totalCases.value / population[code] * 1e5).toFixed(2)
+        };
+        rates[area][code].name = {
+          value: data[area][code].name.value
+        }
+        function dailyOrTotal(what) { 
+          const dailyOrTotal = what.replace("ByPop", "");
+          if(data[area][code][dailyOrTotal]) {
+            data[area][code][dailyOrTotal].forEach(day => {
+              if(!rates[area][code][what]) {
+                rates[area][code][what] = []
+              }
+              rates[area][code][what].push({
+                date: day.date,
+                value: (day.value / population[code] * 1e5).toFixed(2) 
+              })
+            })
+          }
+        }
+        dailyOrTotal("dailyConfirmedCasesByPop");
+        dailyOrTotal("dailyTotalConfirmedCasesByPop")
+      }
+    });
+  })  
+  return(rates)
 }

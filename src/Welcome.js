@@ -40,7 +40,7 @@ import './App.css';
 import Tooltip from './components/Tooltip';
 import { sfType } from './geojsonutils';
 import { isNumber, isArray } from './JSUtils';
-import { assembleGeojsonFrom, getLatestBlobFromPHE } from './components/covid/utils';
+import { assembleGeojsonFrom, getLatestBlobFromPHE, getLatestBlobFromPHENew } from './components/covid/utils';
 
 const osmtiles = {
   "version": 8,
@@ -63,7 +63,7 @@ const osmtiles = {
   }]
 };
 const URL = (process.env.NODE_ENV === 'development' ? Constants.DEV_URL : Constants.PRD_URL);
-const defualtURL = "https://c19pub.azureedge.net/utlas.geojson";
+const defualtURL = "https://c19pub.azureedge.net/assets/geo/utlas.geojson";
 
 // Set your mapbox access token here
 const MAPBOX_ACCESS_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
@@ -152,13 +152,17 @@ export default class Welcome extends React.Component {
       defualtURL;
     
     fetchData(fullURL, (data, error) => {   
+      // console.log(data, error);
       if (!error) {
-        getLatestBlobFromPHE((blob) => {
-          fetchData(`https://c19pub.azureedge.net/${blob}`, (phe, e) => {        
+          getLatestBlobFromPHENew((phe, e) => { 
+            // console.log(phe);
+                   
             //update geojson
             if(!e) {
               // console.log(gj);
               const gj = assembleGeojsonFrom(data, phe, undefined, "utlas");              
+              // console.log(gj);
+              
               this.setState({
                 historyData: phe,
                 loading: false,
@@ -168,7 +172,6 @@ export default class Welcome extends React.Component {
               this._fitViewport(gj)
               this._generateLayer()
             }
-          })
         })
       } else {
         this.setState({

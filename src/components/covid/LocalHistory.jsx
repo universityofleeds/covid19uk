@@ -22,7 +22,7 @@ export default React.memo((props) => {
 
   const { dark, onSelectCallback, hintXValue, 
     type, totalCases = total, showBottomPanel } = props;
-  // console.log(props.data);
+  console.log(props.data);
 
   const measure = type === "countries" ?
   'dailyTotalDeathsByPop' : totalCases ? 'dailyConfirmedCasesByPop' : 'dailyTotalConfirmedCasesByPop';
