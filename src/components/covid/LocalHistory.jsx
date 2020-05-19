@@ -22,7 +22,7 @@ export default React.memo((props) => {
 
   const { dark, onSelectCallback, hintXValue, 
     type, totalCases = total, showBottomPanel } = props;
-  console.log(props.data);
+  // console.log(props.data);
 
   const measure = type === "countries" ?
   'dailyTotalDeathsByPop' : totalCases ? 'dailyConfirmedCasesByPop' : 'dailyTotalConfirmedCasesByPop';
@@ -97,8 +97,8 @@ export default React.memo((props) => {
           }}
           noLimit={true}
           colors={keys.length <= 10 ?
-            [...schemeTableau10.slice(0, keys.length - 1), "#f00"] :
-            keys.map((e, i) => i === (keys.length - 1) ? '#f00' : '#777')
+            [...schemeTableau10.slice(0, keys.length - 1), dark ? '#fff' : '#000'] :
+            keys.map((e, i) => i === (keys.length - 1) ? dark ? '#fff' : '#000' : '#777')
           }
           noLegend={keys.length > 10}
           hintXValue={(xValue) => typeof hintXValue === 'function' &&

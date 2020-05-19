@@ -214,11 +214,12 @@ function generateRates(data, population) {
   const rates = {};
   ['utlas', 'ltlas', 'countries', 'regions'].forEach(area => {
     rates[area] = {}
+    function toFixedAndNumber(str) {return +(str.toFixed(2))}
     Object.keys(data[area]).forEach(code => {      
       if (population[code] && code !== 'metadata') {
         rates[area][code] = {}
         rates[area][code].totalCasesByPop = {
-          value: (data[area][code].totalCases.value / population[code] * 1e5).toFixed(2)
+          value: toFixedAndNumber(data[area][code].totalCases.value / population[code] * 1e5)
         };
         rates[area][code].name = {
           value: data[area][code].name.value
@@ -232,7 +233,7 @@ function generateRates(data, population) {
               }
               rates[area][code][what].push({
                 date: day.date,
-                value: (day.value / population[code] * 1e5).toFixed(2) 
+                value: toFixedAndNumber(day.value / population[code] * 1e5) 
               })
             })
           }

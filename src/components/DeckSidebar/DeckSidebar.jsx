@@ -19,7 +19,6 @@ import Modal from '../Modal';
 import DataTable from '../Table';
 
 import { yearSlider } from '../Showcases/Widgets';
-import { crashes_plot_data } from '../Showcases/Plots';
 import { isNumber } from '../../JSUtils';
 import MultiSelect from '../MultiSelect';
 import Daily from '../covid/Daily';
@@ -37,7 +36,7 @@ export default class DeckSidebar extends React.Component {
       year: "",
       reset: false,
       multiVarSelect: {},
-      barChartVariable: "TotalCases",
+      barChartVariable: "TotalCasesByPop",
       datasetName: props.datasetName
     }
   }
@@ -75,10 +74,7 @@ export default class DeckSidebar extends React.Component {
       onSelectCallback, data, colourCallback, tests, historyData,
       urlCallback, alert, onlocationChange, column, dark,
       toggleOpen } = this.props;
-    let plot_data = [];
-    let plot_data_multi = [[], []];
     const notEmpty = data && data.length > 1;
-    plot_data = crashes_plot_data(notEmpty, data, plot_data, plot_data_multi);
     let columnDomain = [];
     const columnData = notEmpty ?
       xyObjectByProperty(data, column || barChartVariable) : [];
@@ -87,7 +83,7 @@ export default class DeckSidebar extends React.Component {
     const type = datasetName.split("/")[datasetName.split("/").length - 1]
       .replace(".geojson", "");
     if (notEmpty && column && (geomType === 'polygon' ||
-      geomType === 'multipolygon' || "linestring") &&
+      geomType === 'multipolygon' || geomType === "linestring") &&
       isNumber(data[0].properties[column])) {
       // we dont need to use generateDomain(data, column)
       // columnData already has this in its x'es
@@ -95,7 +91,6 @@ export default class DeckSidebar extends React.Component {
       // we will just sort it        
       columnDomain = sortNumericArray(columnDomain);
       // console.log(columnDomain);
-
       this.props.showLegend(
         generateLegend(
           {
@@ -169,7 +164,7 @@ export default class DeckSidebar extends React.Component {
           </div>
           <div>
             {historyData && historyData.overview && !datasetName.endsWith("covid19w") &&
-              `updated: ${new Date(historyData.lastUpdatedAt).toLocaleDateString()}, `}
+              `updated: ${new Date(historyData.metadata.lastUpdatedAt).toLocaleDateString()}, `}
             {/* data */}
             data from {datasetName.endsWith("covid19w") ?
               <a href="https://www.ecdc.europa.eu/en/geographical-distribution-2019-ncov-cases">ECDC</a> :
