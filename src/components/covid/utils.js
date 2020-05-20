@@ -109,7 +109,8 @@ const assembleGeojsonFrom = (geojson, history, date, type = "utlas") => {
     Object.keys(history.rates[type]).forEach(each => {      
       if(f.properties.ctyua19cd === each || 
         f.properties.ctry19cd === each ||
-        f.properties.rgn18cd === each) {
+        f.properties.rgn18cd === each ||
+        f.properties.lad19cd === each) {
         let totalCasesByPop = history.rates[type][each].totalCasesByPop.value;
         if(date) {
           history.rates[type][each][measure].forEach(e => {   
@@ -238,8 +239,18 @@ function generateRates(data, population) {
             })
           }
         }
-        dailyOrTotal("dailyConfirmedCasesByPop");
-        dailyOrTotal("dailyTotalConfirmedCasesByPop")
+        const cols = [
+          "dailyTotalDeathsByPop", "dailyDeathsByPop",
+          "dailyConfirmedCasesByPop", "dailyTotalConfirmedCasesByPop"
+        ]
+        if(area === 'countries') {
+          cols.slice(0,2).forEach(v => dailyOrTotal(v))
+          if(code === 'E92000001') { // England
+            cols.slice(2,4).forEach(v => dailyOrTotal(v))
+          }
+        } else {
+          cols.slice(2,4).forEach(v => dailyOrTotal(v))
+        }
       }
     });
   })  

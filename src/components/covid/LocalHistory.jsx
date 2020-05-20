@@ -10,7 +10,6 @@ import BottomPanel from './BottomPanel';
 // import REChartsMultiLine from '../Showcases/REChartsMultiLine';
 
 export default React.memo((props) => {
-  const [checked, setChecked] = useState(false);
   const [allDates, setAllDates] = useState(false);
   const [total, setTotal] = useState(false);
 
@@ -35,14 +34,15 @@ export default React.memo((props) => {
     typeof showBottomPanel === 'function' &&
     showBottomPanel(<BottomPanel 
       history={
-        props.data.rates.countries.E92000001.dailyConfirmedCasesByPop
+        [props.data.rates.countries.E92000001.dailyConfirmedCasesByPop,
+          props.data.rates.countries.E92000001.dailyDeathsByPop]
     }/>)
   }, [type, totalCases, allDates])
 
   if (filteredHistory) {
     //list history
     let keys = Object.keys(filteredHistory); //.slice(0, shownGeos);
-    if (!keys.includes('avg') && type !== "countries" && !checked) {
+    if (!keys.includes('avg') && type !== "countries") {
       filteredHistory.avg = avg;
       keys.push("avg")
     }
@@ -106,26 +106,6 @@ export default React.memo((props) => {
           crosshair={true}
         />
         {
-          type === "countries" ?
-            <Checkbox
-              checked={checked}
-              onChange={e => {
-                setChecked(e.target.checked)
-                if (e.target.checked) {
-                  const newFilter = {}
-                  Object.keys(geoHistory).forEach(e => {
-                    if (e !== "England") {
-                      newFilter[e] = geoHistory[e];
-                    }
-                  });
-                  setFilteredHistory(newFilter)
-                } else {
-                  setFilteredHistory(geoHistory);
-                }
-              }}
-            >Hide England</Checkbox>
-            :
-            type === "utlas" && 
             <>
               <Checkbox
                 checked={allDates}

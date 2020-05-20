@@ -7,6 +7,7 @@ const host = (process.env.NODE_ENV === 'development' ? DEV_URL : PRD_URL);
 
 const urls = {
   LA:  'https://c19pub.azureedge.net/assets/geo/utlas.geojson',
+  // LT:  'https://c19pub.azureedge.net/assets/geo/ltlas.geojson',
   RE: 'https://c19pub.azureedge.net/assets/geo/regions.geojson',
   UK:'https://c19pub.azureedge.net/assets/geo/countries.geojson',
   World: host + '/api/covid19w'

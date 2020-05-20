@@ -609,7 +609,7 @@ export default class Welcome extends React.Component {
               {legend}
             </div>
           }
-          { bottomPanel && !this.state.datasetName.endsWith("covid19w") &&
+          { !isMobile() && bottomPanel && !this.state.datasetName.endsWith("covid19w") &&
             <div 
               style={{textAlign: 'center', 
               marginRight: 100,
