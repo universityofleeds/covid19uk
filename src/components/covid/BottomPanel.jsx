@@ -28,7 +28,7 @@ export default React.memo((props) => {
         data={
           data.slice(26,data.length)
         }>
-        <CartesianGrid strokeDasharray="3 3" />
+        <Legend align="left" layout="vertical"/>
         <XAxis dataKey="x" />
         <YAxis />
         <Tooltip content={(props) => {
@@ -37,7 +37,7 @@ export default React.memo((props) => {
             const { payload, label } = props;            
             return (
               <>
-                <p>{`${label}, ${key}: ${payload[0].value}, 
+                <p>{`${label} - ${key}: ${payload[0].value}, 
                 ${key2}: ${payload[1].value}`}</p>
               </>)
           }

@@ -40,7 +40,7 @@ import './App.css';
 import Tooltip from './components/Tooltip';
 import { sfType } from './geojsonutils';
 import { isNumber, isArray } from './JSUtils';
-import { assembleGeojsonFrom, getLatestBlobFromPHE, getLatestBlobFromPHENew } from './components/covid/utils';
+import { assembleGeojsonFrom, getLatestBlobFromPHENew } from './components/covid/utils';
 
 const osmtiles = {
   "version": 8,
@@ -333,6 +333,8 @@ export default class Welcome extends React.Component {
     if (geomType === "polygon" || geomType === "multipolygon") {
       options.getFillColor = (d) =>
         colorScale(d, data, column ? column : 0)
+      // options.highlightColor = this.props.dark ? '#fff' : '#000'
+      options.autoHighlight = true
     }
     if(geomType === "point" && cols.includes("totalCases")) {
       // options.getPosition = d => d.geometry.coordinates;
@@ -397,13 +399,20 @@ export default class Welcome extends React.Component {
     // console.log(hoveredObject)
     // return
     if (!hoveredObject) {
-      this.setState({ tooltip: "" })
+      this.setState({ hoveredObject, tooltip: "" })
       return;
     }
     this.setState({
+      hoveredObject,
       tooltip:
         // react did not like x and y props.
         <Tooltip
+          dark={this.props.dark}
+          type={this.state.datasetName
+            .split("/")[this.state.datasetName.split("/").length-1]
+            .replace(".geojson", "")
+          }
+          history={this.state.historyData}
           isMobile={isMobile()}
           topx={x} topy={y} hoveredObject={hoveredObject} />
     })
@@ -597,6 +606,7 @@ export default class Welcome extends React.Component {
           showLegend={(legend) => this.setState({ legend })}
           showBottomPanel={(bottomPanel) => this.setState({bottomPanel})}
           datasetName={this.state.datasetName}
+          hoveredObject={this.state.hoveredObject}
         />
         <div className="mapboxgl-control-container">
           {
@@ -613,7 +623,7 @@ export default class Welcome extends React.Component {
             <div 
               style={{textAlign: 'center', 
               marginRight: 100,
-              marginBottom: 45}}
+              marginBottom: 45, backgroundColor: '#fffc'}}
               className="mapboxgl-ctrl-bottom-right mapbox-legend bottom-panel">
                 {bottomPanel}
             </div> 

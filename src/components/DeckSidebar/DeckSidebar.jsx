@@ -42,7 +42,8 @@ export default class DeckSidebar extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const { data, alert, loading, datasetName, tests, historyData } = this.props;
+    const { data, alert, loading, datasetName, tests, 
+      historyData, hoveredObject } = this.props;
     const { elevation, radius, reset,
       barChartVariable } = this.state;
     // avoid rerender as directly
@@ -54,7 +55,9 @@ export default class DeckSidebar extends React.Component {
       barChartVariable !== nextState.barChartVariable ||
       datasetName !== nextProps.datasetName ||
       tests !== nextProps.tests ||
-      historyData !== nextProps.historyData) return true;
+      historyData !== nextProps.historyData ||
+      JSON.stringify(hoveredObject) !==  
+      JSON.stringify(nextProps.hoveredObject)) return true;
     //TODO:  a more functional way is needed        
     if (data && nextProps && nextProps.data &&
       JSON.stringify(data) === JSON.stringify(nextProps.data)) {
@@ -197,6 +200,7 @@ export default class DeckSidebar extends React.Component {
               <hr style={{ clear: 'both' }} />
               {historyData && !datasetName.endsWith("covid19w") &&
                 <LocalHistory data={historyData} dark={dark}
+                  hoveredObject={this.props.hoveredObject}
                   type={type}
                   showBottomPanel={this.props.showBottomPanel}
                   onSelectCallback={(selected) => {
@@ -230,15 +234,7 @@ export default class DeckSidebar extends React.Component {
               {historyData && tests && !datasetName.endsWith("covid19w") &&
                 <Daily data={historyData.countries.E92000001} tests={tests} dark={dark} />}
               {notEmpty && datasetName.endsWith("covid19w") &&
-                <WorldDaily data={data} dark={dark}
-                // onSelectCallback={(selected) => {
-                //   typeof onSelectCallback === 'function' &&
-                //     onSelectCallback({
-                //       what: selected ? 'multi' : '',
-                //       selected: {countryterritoryCode: new Set([selected])}
-                //     });
-                // }}
-                />
+                <WorldDaily data={data} dark={dark} />
               }
               <Tabs defaultActiveKey={"1"} id="main-tabs">
                 <Tab eventKey="1" title={

@@ -1,10 +1,11 @@
 import React from 'react';
 import { Table } from 'baseui/table';
 import { humanize } from '../utils';
-import { isString, isObject, isArray } from '../JSUtils';
+import { isObject, isArray } from '../JSUtils';
+import { LineChart, Line } from 'recharts';
 
 const WIDTH = 220;
-const BAR_HEIGHT = 80;
+const BAR_HEIGHT = 60;
 
 export default class Tooltip extends React.Component {
   constructor(props) {
@@ -35,7 +36,8 @@ export default class Tooltip extends React.Component {
    * 2. properties of `.type === 'Feature'`.
    */
   render() {
-    const { topx, topy, hoveredObject } = this.props;
+    const { topx, topy, hoveredObject, history,
+    type, dark } = this.props;
     const { isMobile } = this.state;
     // console.log(hoveredObject);
 
@@ -47,8 +49,14 @@ export default class Tooltip extends React.Component {
     // {cluster: true, cluster_id: 8, point_count: 54, 
     // point_count_abbreviated: 54}
     
-    // console.log(crashes_data);
-    
+    const code = hoveredObject.properties &&
+      hoveredObject.properties[
+        Object.keys(hoveredObject.properties)[0]];
+    const measure = Object.keys(code && history.rates[type][code])
+      .find(e => e.startsWith("daily"));
+    const data = history.rates[type][code][measure];
+    // console.log(code, data);
+
     const w = window.innerWidth;
     const y = window.innerHeight;
     const n_topy = isMobile ? 10 :
@@ -58,6 +66,8 @@ export default class Tooltip extends React.Component {
     const tooltip =
       <div
         className="xyz" style={{
+          backgroundColor: dark ? '#000' : '#fff',
+          color: !dark ? '#000' : '#fff',
           top: topy + (WIDTH + BAR_HEIGHT) > y ? n_topy : topy,
           left: topx + WIDTH > w ? n_left : topx
         }}>
@@ -74,6 +84,13 @@ export default class Tooltip extends React.Component {
             this._listPropsAndValues(hoveredObject)
           }
         </div>
+        {code &&
+        <>
+          {measure}
+          <LineChart width={WIDTH} height={BAR_HEIGHT} data={data}>
+          <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={2} />
+        </LineChart>
+        </>}
       </div >
     return (tooltip)
   }

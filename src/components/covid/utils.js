@@ -3,6 +3,7 @@ import xmlToJSON from 'xmltojson';
 
 import { isArray } from "../../JSUtils";
 import { fetchData } from '../../utils';
+import { COLS } from '../../Constants';
 
 const pop = [55977178, 1881641, 5438100,3138631]
 
@@ -239,17 +240,13 @@ function generateRates(data, population) {
             })
           }
         }
-        const cols = [
-          "dailyTotalDeathsByPop", "dailyDeathsByPop",
-          "dailyConfirmedCasesByPop", "dailyTotalConfirmedCasesByPop"
-        ]
         if(area === 'countries') {
-          cols.slice(0,2).forEach(v => dailyOrTotal(v))
+          COLS.slice(0,2).forEach(v => dailyOrTotal(v))
           if(code === 'E92000001') { // England
-            cols.slice(2,4).forEach(v => dailyOrTotal(v))
+            COLS.slice(2,4).forEach(v => dailyOrTotal(v))
           }
         } else {
-          cols.slice(2,4).forEach(v => dailyOrTotal(v))
+          COLS.slice(2,4).forEach(v => dailyOrTotal(v))
         }
       }
     });
