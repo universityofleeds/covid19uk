@@ -21,13 +21,24 @@ export default React.memo((props) => {
 
   const { dark, onSelectCallback, hintXValue, hoveredObject, 
     type, totalCases = total, showBottomPanel } = props;
-  const code = hoveredObject &&  
-  hoveredObject.properties[Object.keys(hoveredObject.properties)[1]];
+
   // console.log(code && geoHistory[code]);
 
   const measure = type === "countries" ?
   'dailyTotalDeathsByPop' : totalCases ? 'dailyConfirmedCasesByPop' : 'dailyTotalConfirmedCasesByPop';
 
+  React.useEffect(() => {
+    const name = hoveredObject &&  
+    hoveredObject.properties[Object.keys(hoveredObject.properties)[1]];
+    if(filteredHistory) {
+      if(name) {
+        setFilteredHistory([geoHistory[name]])
+      } else {
+        setFilteredHistory(geoHistory)
+      }
+    }
+  }, [hoveredObject])
+  
   React.useEffect(() => {
     initialState({
       data: props.data.rates, setData, setFilteredHistory,
@@ -86,9 +97,7 @@ export default React.memo((props) => {
         /> */}
         <MultiLinePlot
           dark={dark}
-          data={code ? 
-            [geoHistory[code]] :
-            keys.map(e => filteredHistory[e])}
+          data={keys.map(e => filteredHistory[e])}
           legend={keys}
           title={type + ": " + measure +
             (type !== "countries" ? " vs avg." : "")}

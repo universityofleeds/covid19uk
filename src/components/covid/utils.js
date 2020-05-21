@@ -201,6 +201,43 @@ const getLatestBlobFromPHE = (callback) => {
     console.error(error);
   });
 }
+
+function rollingavg(data, type, measure) {
+  const rcd = [];
+  const gh = {};
+  const avg2 = [];
+  for (let date = new Date("2020-02-21"); date < new Date(); date = date.addDays(7)) {
+    const row = {};
+    let a = 0;
+    row.date = date.getFullYear() + "-" +
+      (date.getMonth() + 1) + "-" + date.getDate();
+    //go through each
+    Object.keys(data[type]).forEach(e => {
+      const cc = data[type][e][measure];
+      if (!gh[data[type][e].name.value]) {
+        gh[data[type][e].name.value] = [];
+      }
+      let y = 0;
+      cc.forEach(ov => {
+        if (new Date(ov.date) >= date &&
+          new Date(ov.date) < date.addDays(7)) {
+          y += ov.value;
+        }
+      });
+      const r7a = +((y / 7).toFixed(2));
+      a += r7a;
+      gh[data[type][e].name.value]
+        .push({ x: row.date, y: r7a });
+      row[data[type][e].name.value] = r7a;
+    });
+    rcd.push(row);
+    avg2.push({
+      x: row.date,
+      y: Math.floor(a / Object.keys(data[type]).length)
+    });
+  }
+  return { gh, avg2, rcd };
+}
  
 export {
   generateMultipolygonGeojsonFrom,
@@ -208,6 +245,7 @@ export {
   getLatestBlobFromPHE,
   assembleGeojsonFrom,
   countryHistory,
+  rollingavg,
   breakdown,
   daysDiff
 }
