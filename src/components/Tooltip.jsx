@@ -88,7 +88,8 @@ export default class Tooltip extends React.Component {
         <>
           {measure}
           <LineChart width={WIDTH} height={BAR_HEIGHT} data={data}>
-          <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={2} />
+          <Line dot={false} type="monotone" dataKey="value" 
+          stroke="#8884d8" strokeWidth={2} />
         </LineChart>
         </>}
       </div >

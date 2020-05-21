@@ -34,7 +34,7 @@ export default function MultiLinePlot(options) {
   
   let includesLockdown = false;
   data[0].forEach(e => {
-    if(e.x === "2020-03-23") {
+    if(e.x === "2020-03-23") { // exact for react-vis
       includesLockdown = true;
     }
   })

@@ -98,7 +98,7 @@ export default class DeckSidebar extends React.Component {
         generateLegend(
           {
             domain: columnDomain,
-            title: 'Daily cases'
+            title: this.state.xValue || 'Cases/Deaths'
           }
         )
       );
