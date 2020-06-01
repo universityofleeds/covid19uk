@@ -47,7 +47,7 @@ function CustomTicks(props) {
       alignItems: 'center'
     }}>
       <Button
-        style={{ maxHeight: 40 }}
+        style={{ maxHeight: 40, maxWidth: 40 }}
         size={SIZE.compact}
         onClick={() => {
           if (!delay) {
