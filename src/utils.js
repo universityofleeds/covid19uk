@@ -17,6 +17,7 @@ import { isString, isNumber } from './JSUtils.js';
 import IconClusterLayer from './icon-cluster-layer';
 import { ArcLayer, PathLayer } from '@deck.gl/layers';
 import { descending } from 'd3-array';
+import ArrowLayer from './components/ArrowLayer';
 
 const getResultsFromGoogleMaps = (string, callback) => {
 
@@ -170,6 +171,15 @@ const generateDeckLayer = (name, data, renderTooltip, options) => {
     }
     addOptionsToObject(options, hexObj)
     return (new HexagonLayer(hexObj))
+  } else if (name === 'arrow') {    
+    const arrowObj = {
+      id: 'arrow-layer',
+      data: data,
+      pickable: true,
+      onHover: renderTooltip
+    }
+    addOptionsToObject(options, arrowObj)
+    return (new ArrowLayer(arrowObj))
   } else if (name === 'scatterplot') {
     const scatterObj = {
       id: 'scatterplot-layer',

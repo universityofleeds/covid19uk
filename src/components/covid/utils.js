@@ -5,8 +5,6 @@ import { isArray } from "../../JSUtils";
 import { fetchData } from '../../utils';
 import { COLS } from '../../Constants';
 
-const pop = [55977178, 1881641, 5438100,3138631]
-
 const numberWithCommas = (x) => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
@@ -203,19 +201,25 @@ const getLatestBlobFromPHE = (callback) => {
 }
 
 function rollingavg(data, type, measure) {
-  const rcd = [];
-  const gh = {};
-  const avg2 = [];
-  for (let date = new Date("2020-02-21"); date < new Date(); date = date.addDays(7)) {
+  Date.prototype.addDays = function (days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+  }
+  const rechartsData = [];
+  const geoHistory = {};
+  const avg = [];
+  for (let date = new Date("2020-02-24"); date < new Date(); date = date.addDays(7)) {
     const row = {};
     let a = 0;
     row.date = date.getFullYear() + "-" +
-      (date.getMonth() + 1) + "-" + date.getDate();
+      (date.getMonth() + 1).toString().padStart(2, '0') + 
+      "-" + date.getDate();
     //go through each
     Object.keys(data[type]).forEach(e => {
       const cc = data[type][e][measure];
-      if (!gh[data[type][e].name.value]) {
-        gh[data[type][e].name.value] = [];
+      if (!geoHistory[data[type][e].name.value]) {
+        geoHistory[data[type][e].name.value] = [];
       }
       let y = 0;
       cc.forEach(ov => {
@@ -226,17 +230,71 @@ function rollingavg(data, type, measure) {
       });
       const r7a = +((y / 7).toFixed(2));
       a += r7a;
-      gh[data[type][e].name.value]
+      geoHistory[data[type][e].name.value]
         .push({ x: row.date, y: r7a });
       row[data[type][e].name.value] = r7a;
     });
-    rcd.push(row);
-    avg2.push({
+    rechartsData.push(row);
+    avg.push({
       x: row.date,
       y: Math.floor(a / Object.keys(data[type]).length)
     });
   }
-  return { gh, avg2, rcd };
+  return { geoHistory, avg, rechartsData };
+}
+
+function historyByOneArea(options) {
+  const { data, type = "utlas", 
+  allDates, measure } = options;
+  const geoHistory = {};
+  //add average
+  const avg = [];
+  let m = allDates ? 0 : 1e10, utla, name;
+  // find longest/shortest
+  Object.keys(data[type]).map(e => {
+    const cc = data[type][e][measure];
+    if (cc && (allDates ? cc.length > m : cc.length < m)) {
+      m = cc.length;
+      utla = data[type][e];
+      name = data[type][e].name.value;
+    }
+  });
+  //add Rechart style object
+  const rechartsData = [];
+  utla[measure].map(v => {
+    //e.date, e.value
+    let y = v.value;
+    const row = {};
+    row.date = v.date;
+    row[name] = y;
+    //go through the rest and add values of same dates
+    Object.keys(data[type]).map(e => {
+      const cc = data[type][e][measure];
+      if (!geoHistory[data[type][e].name.value]) {
+        geoHistory[data[type][e].name.value] = [];
+      }
+      cc.map(ov => {
+        if (utla.name !== data[type][e].name.value) {
+          if (ov.date === v.date) {
+            y += ov.value;
+            geoHistory[data[type][e].name.value]
+              .push({ x: v.date, y: ov.value });
+            row[data[type][e].name.value] = ov.value;
+          }
+        }
+        else {
+          geoHistory[data[type][e].name.value]
+            .push({ x: ov.date, y: ov.value });
+        }
+      });
+    });
+    avg.push({
+      x: v.date,
+      y: Math.floor(y / Object.keys(data[type]).length)
+    });
+    rechartsData.push(row);
+  });
+  return { geoHistory, avg, rechartsData };
 }
  
 export {
@@ -244,6 +302,7 @@ export {
   getLatestBlobFromPHENew,
   getLatestBlobFromPHE,
   assembleGeojsonFrom,
+  historyByOneArea,
   countryHistory,
   rollingavg,
   breakdown,

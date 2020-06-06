@@ -7,6 +7,8 @@ import MultiSelect from '../MultiSelect';
 import './style.css';
 import CustomSlider from './CustomSlider';
 import BottomPanel from './BottomPanel';
+import {rollingavg} from './utils';
+
 // import REChartsMultiLine from '../Showcases/REChartsMultiLine';
 
 export default React.memo((props) => {
@@ -144,51 +146,7 @@ export default React.memo((props) => {
 function initialState(options) {
   const { data, setData, setFilteredHistory,
     type = "utlas", allDates, measure } = options
-  const geoHistory = {};
-  //add average
-  const avg = []; let m = allDates ? 0 : 1e10, utla, name;
-  // find longest/shortest
-  Object.keys(data[type]).map(e => {
-    const cc = data[type][e][measure];
-    if (cc && (allDates ? cc.length > m : cc.length < m)) {
-      m = cc.length; utla = data[type][e]; name = data[type][e].name.value;
-    }
-  })
-
-  //add Rechart style object
-  const rechartsData = []
-  utla[measure].map(v => {
-    //e.date, e.value
-    let y = v.value;
-    const row = {}
-    row.date = v.date;
-    row[name] = y;
-    //go through the rest and add values of same dates
-    Object.keys(data[type]).map(e => {
-      const cc = data[type][e][measure];
-      if (!geoHistory[data[type][e].name.value]) {
-        geoHistory[data[type][e].name.value] = [];
-      }
-      cc.map(ov => {
-        if (utla.name !== data[type][e].name.value) {
-          if (ov.date === v.date) {
-            y += ov.value;
-            geoHistory[data[type][e].name.value]
-            .push({ x: v.date, y: ov.value })
-            row[data[type][e].name.value] = ov.value;
-          }
-        } else {
-          geoHistory[data[type][e].name.value]
-            .push({ x: ov.date, y: ov.value })
-        }
-      })
-    })
-    avg.push({ 
-      x: v.date, 
-      y: Math.floor(y / Object.keys(data[type]).length) 
-    })
-    rechartsData.push(row)
-  })
+  const {geoHistory, avg, rechartsData} = rollingavg(data, type, measure)
   const geo = Object.keys(geoHistory);
 
   setData({ geo, avg, geoHistory, rechartsData });

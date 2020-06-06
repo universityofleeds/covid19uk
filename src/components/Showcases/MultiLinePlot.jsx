@@ -94,7 +94,7 @@ export default function MultiLinePlot(options) {
             style={{ fill: 'none' }}
             data={line} 
             color={colors && colors[i]} />)}
-        {options.crosshair && includesLockdown &&
+        {!hint && options.crosshair && includesLockdown &&
           <Crosshair
             values={[{x:"2020-03-23", y: 1}]}
             > 

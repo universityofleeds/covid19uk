@@ -39,7 +39,7 @@ import history from './history';
 import './App.css';
 import Tooltip from './components/Tooltip';
 import { sfType } from './geojsonutils';
-import { isNumber, isArray } from './JSUtils';
+import { isNumber } from './JSUtils';
 import { assembleGeojsonFrom, getLatestBlobFromPHENew } from './components/covid/utils';
 
 const osmtiles = {
@@ -124,6 +124,7 @@ export default class Welcome extends React.Component {
       legend: false,
       datasetName: defualtURL,
       bottomPanel: false,
+      layerStyle: "arrow"
     }
     this._generateLayer = this._generateLayer.bind(this)
     this._renderTooltip = this._renderTooltip.bind(this);
@@ -218,9 +219,9 @@ export default class Welcome extends React.Component {
       this.state.column;
 
     if (!data) return;
-    if (filter && filter.selected && filter.hint) {
-      const type = datasetName.split("/")[datasetName.split("/").length-1]
+    const type = datasetName.split("/")[datasetName.split("/").length-1]
                   .replace(".geojson", "")
+    if (filter && filter.selected && filter.hint) {
       const gj = assembleGeojsonFrom(
         this.state.data, 
         this.state.historyData, filter.hint, type);
@@ -264,8 +265,8 @@ export default class Welcome extends React.Component {
     }
     // console.log(data.length);
     let layerStyle = (filter && filter.what ===
-      'layerStyle' && filter.selected) || this.state.layerStyle || 'grid';
-    if (geomType !== "point") layerStyle = "geojson"
+      'layerStyle' && filter.selected) || this.state.layerStyle || 'grid';      
+    if (geomType !== "point" && !this.state.layerStyle) layerStyle = "geojson"
     if (data.length < iconLimit && !column &&
       geomType === "point") layerStyle = 'icon';
     const options = {
@@ -352,16 +353,55 @@ export default class Welcome extends React.Component {
       options.opacity = 0.3
 
     }
+    if (layerStyle === 'arrow') {
+      const colArray = data.map(f => f.properties[columnNameOrIndex]);
+      const oldMax = getMax(colArray);
+      const oldMin = getMin(colArray);
+      options.getPosition = d => {
+        const cent = centroid(d.geometry).geometry.coordinates;
+        // console.log(cent);
+        return [cent[0], cent[1], 0];
+      };
+      options.getColor = [255, 255, 255];
+      // getRotationAngle: d => d.properties.result.includes("gain from") ? 45 : 1,
+      options.getScale = 300;
+      options.getHeight = d => {
+        const x = +(d.properties[columnNameOrIndex]);
+        return convertRange(x, {oldMax, oldMin, newMax: 1, newMin: 0.2});
+      };
+      // getWidth: d => 4
+    }
     const alayer = generateDeckLayer(
       layerStyle, data, this._renderTooltip, options
     )
+    const lockdown = assembleGeojsonFrom(
+      this.state.data,
+      this.state.historyData, "2020-03-23", type)
+      .features;
+    const colArray = lockdown.map(f => f.properties[columnNameOrIndex]);
+    const oldMax = getMax(colArray);
+    const oldMin = getMin(colArray);
 
     this.setState({
       loading: false,
       layerStyle, geomType,
       tooltip: "",
       filtered: data,
-      layers: [alayer],
+      layers: [
+        alayer,
+        generateDeckLayer(
+          layerStyle,
+          lockdown,
+          this._renderTooltip, 
+          Object.assign(options, {
+            getColor: [255, 0, 0],
+            getHeight: d => {
+              const x = +(d.properties[columnNameOrIndex]);
+              return convertRange(x, {oldMax, oldMin, newMax: 1, newMin: 0.2});
+            }
+          })
+        )
+      ],
       radius: radius ? radius : this.state.radius,
       elevation: elevation ? elevation : this.state.elevation,
       road_type: filter && filter.what === 'road_type' ? filter.selected :
