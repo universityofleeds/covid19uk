@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   BarChart, Bar, Brush,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend
+  XAxis, YAxis, Tooltip, Legend
 } from 'recharts';
 
 import { useWindowSize } from '../../utils';
 
 export default React.memo((props) => {
   const [width] = useWindowSize();
-  const { history } = props;
+  const { history, dark } = props;
   const key = "cases";
   const key2 = "deaths"; 
 
@@ -29,8 +29,8 @@ export default React.memo((props) => {
           data.slice(26,data.length)
         }>
         <Legend align="left" layout="vertical"/>
-        <XAxis dataKey="x" />
-        <YAxis />
+        <XAxis dataKey="x" stroke={dark ? '#fff' : '#000'}/>
+        <YAxis stroke={dark ? '#fff' : '#000'}/>
         <Tooltip content={(props) => {
           const { active } = props;
           if (active) {
@@ -43,9 +43,9 @@ export default React.memo((props) => {
           }
         }} />
         {/* <Legend verticalAlign="top" wrapperStyle={{ lineHeight: '40px' }} /> */}
-        <Brush dataKey='x' height={10} stroke="#a43" />
-        <Bar dataKey={key} fill="#a43" />
-        <Bar dataKey={key2} fill="rgb(18,147,156)" />
+        <Brush dataKey='x' height={10} stroke="rgb(18,147,154)" />
+        <Bar dataKey={key2} fill="rgb(121,199,227)" />
+        <Bar dataKey={key} fill="rgb(18,147,154)" />
 
       </BarChart>
     </>

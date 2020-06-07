@@ -47,7 +47,7 @@ export default React.memo((props) => {
       type, allDates, measure
     });
     typeof showBottomPanel === 'function' &&
-    showBottomPanel(<BottomPanel 
+    showBottomPanel(<BottomPanel  dark={dark}
       history={
         [props.data.rates.countries.E92000001.dailyConfirmedCasesByPop,
           props.data.rates.countries.E92000001.dailyDeathsByPop]

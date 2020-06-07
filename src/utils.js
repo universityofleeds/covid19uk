@@ -771,6 +771,13 @@ function useWindowSize() {
   return size;
 }
 
+const theme = (dark) => {
+  return({
+    background: !dark ? '#fff9' : 'rgb(36,39,48,0.8)',
+    color: dark ? '#fff' : '#000',
+  })
+}
+
 export {
   getResultsFromGoogleMaps,
   xyObjectFromKeyValue,
@@ -802,4 +809,5 @@ export {
   getMin,
   getMax,
   isURL,
+  theme,
 }

@@ -1,9 +1,12 @@
 import * as helpers from '@turf/helpers';
 import xmlToJSON from 'xmltojson';
+import centroid from '@turf/centroid';
 
 import { isArray } from "../../JSUtils";
 import { fetchData } from '../../utils';
 import { COLS } from '../../Constants';
+import { convertRange, getMin, getMax
+} from '../../utils';
 
 const numberWithCommas = (x) => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -297,12 +300,31 @@ function historyByOneArea(options) {
   return { geoHistory, avg, rechartsData };
 }
  
+function covidArrowLayer(data, columnNameOrIndex, options, dark) {
+  const colArray = data.map(f => f.properties[columnNameOrIndex]);
+  const oldMax = getMax(colArray);
+  const oldMin = getMin(colArray);
+  options.getPosition = d => {
+    const cent = centroid(d.geometry).geometry.coordinates;
+    // console.log(cent);
+    return [cent[0], cent[1], 0];
+  };
+  options.getColor = dark ? [255, 255, 255] : [0, 0, 0];
+  // getRotationAngle: d => d.properties.result.includes("gain from") ? 45 : 1,
+  options.getScale = 300;
+  options.getHeight = d => {
+    const x = +(d.properties[columnNameOrIndex]);
+    return convertRange(x, { oldMax, oldMin, newMax: 1, newMin: 0.2 });
+  };
+}
+
 export {
   generateMultipolygonGeojsonFrom,
   getLatestBlobFromPHENew,
   getLatestBlobFromPHE,
   assembleGeojsonFrom,
   historyByOneArea,
+  covidArrowLayer,
   countryHistory,
   rollingavg,
   breakdown,

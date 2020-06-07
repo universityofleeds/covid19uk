@@ -28,7 +28,7 @@ import {
   fetchData, generateDeckLayer,
   getParamsFromSearch, getBbx,
   isMobile, colorScale,
-  colorRanges,
+  colorRanges, theme,
   convertRange, getMin, getMax, isURL
 } from './utils';
 import Constants from './Constants';
@@ -40,7 +40,8 @@ import './App.css';
 import Tooltip from './components/Tooltip';
 import { sfType } from './geojsonutils';
 import { isNumber } from './JSUtils';
-import { assembleGeojsonFrom, getLatestBlobFromPHENew } from './components/covid/utils';
+import { assembleGeojsonFrom, 
+  getLatestBlobFromPHENew, covidArrowLayer } from './components/covid/utils';
 
 const osmtiles = {
   "version": 8,
@@ -354,21 +355,7 @@ export default class Welcome extends React.Component {
 
     }
     if (layerStyle === 'arrow') {
-      const colArray = data.map(f => f.properties[columnNameOrIndex]);
-      const oldMax = getMax(colArray);
-      const oldMin = getMin(colArray);
-      options.getPosition = d => {
-        const cent = centroid(d.geometry).geometry.coordinates;
-        // console.log(cent);
-        return [cent[0], cent[1], 0];
-      };
-      options.getColor = [255, 255, 255];
-      // getRotationAngle: d => d.properties.result.includes("gain from") ? 45 : 1,
-      options.getScale = 300;
-      options.getHeight = d => {
-        const x = +(d.properties[columnNameOrIndex]);
-        return convertRange(x, {oldMax, oldMin, newMax: 1, newMin: 0.2});
-      };
+      covidArrowLayer(data, columnNameOrIndex, options, this.props.dark);
       // getWidth: d => 4
     }
     const alayer = generateDeckLayer(
@@ -389,6 +376,7 @@ export default class Welcome extends React.Component {
       filtered: data,
       layers: [
         alayer,
+        // lockdown layer
         generateDeckLayer(
           layerStyle,
           lockdown,
@@ -653,17 +641,21 @@ export default class Welcome extends React.Component {
             legend && (geomType === 'polygon' ||
               geomType === 'multipolygon') &&
             <div 
-              style={{textAlign: 'center', 
-              marginBottom: 45}}
+              style={{
+                ...theme(this.props.dark),
+                textAlign: 'center', 
+                marginBottom: 45}}
               className="mapboxgl-ctrl-bottom-right mapbox-legend">
               {legend}
             </div>
           }
           { !isMobile() && bottomPanel && !this.state.datasetName.endsWith("covid19w") &&
             <div 
-              style={{textAlign: 'center', 
-              marginRight: 100,
-              marginBottom: 45, backgroundColor: '#fffc'}}
+              style={{
+                ...theme(this.props.dark),
+                textAlign: 'center', 
+                marginRight: 100,
+                marginBottom: 45}}
               className="mapboxgl-ctrl-bottom-right mapbox-legend bottom-panel">
                 {bottomPanel}
             </div> 
