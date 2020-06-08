@@ -125,7 +125,7 @@ export default class Welcome extends React.Component {
       legend: false,
       datasetName: defualtURL,
       bottomPanel: false,
-      layerStyle: "arrow"
+      layerStyle: Constants.LAYERSTYLES[1]
     }
     this._generateLayer = this._generateLayer.bind(this)
     this._renderTooltip = this._renderTooltip.bind(this);
@@ -376,18 +376,26 @@ export default class Welcome extends React.Component {
       filtered: data,
       layers: [
         alayer,
-        // lockdown layer
+        // polygon layer
+        // generateDeckLayer(
+        //   'geojson', data, this._renderTooltip, options
+        // ),
+        // lockdown layer in arrow
         generateDeckLayer(
-          layerStyle,
+          layerStyle === "arrow" ? "arrow" : "scatterplot",
           lockdown,
           this._renderTooltip, 
-          Object.assign(options, {
-            getColor: [255, 0, 0],
+          {
+            radiusMinPixels: 10,
+            getColor: d => layerStyle === "arrow" ? [255, 0, 0] :
+            colorScale(d, data, column ? column : 0),
             getHeight: d => {
               const x = +(d.properties[columnNameOrIndex]);
               return convertRange(x, {oldMax, oldMin, newMax: 1, newMin: 0.2});
-            }
-          })
+            },
+            getPosition: options.getPosition,
+            getScale: 300
+          }
         )
       ],
       radius: radius ? radius : this.state.radius,
@@ -397,7 +405,8 @@ export default class Welcome extends React.Component {
       colourName: cn || colourName,
       column, // all checked
       coords: filter && filter.what === 'coords' ? filter.selected :
-        this.state.coords
+        this.state.coords,
+      open: true // sidebar, see DeckSidebarrContainer hook
     })
   }
 
@@ -635,11 +644,15 @@ export default class Welcome extends React.Component {
           showBottomPanel={(bottomPanel) => this.setState({bottomPanel})}
           datasetName={this.state.datasetName}
           hoveredObject={this.state.hoveredObject}
+          toggleOpen={(open) => this.setState({ open })}
         />
         <div className="mapboxgl-control-container">
           {
             legend && (geomType === 'polygon' ||
-              geomType === 'multipolygon') &&
+              geomType === 'multipolygon') && 
+              // the other place to place this is DeckSidebar where 
+              // layerStyle is props.
+              layerStyle !== 'arrow' &&
             <div 
               style={{
                 ...theme(this.props.dark),
@@ -649,13 +662,15 @@ export default class Welcome extends React.Component {
               {legend}
             </div>
           }
-          { !isMobile() && bottomPanel && !this.state.datasetName.endsWith("covid19w") &&
+          { !isMobile() && bottomPanel && 
+          !this.state.datasetName.endsWith("covid19w") && 
             <div 
               style={{
                 ...theme(this.props.dark),
+                transition: 'all 0.2s ease-in-out',
                 textAlign: 'center', 
-                marginRight: 100,
-                marginBottom: 45}}
+                marginRight: layerStyle === 'arrow' ? 10 : 100,
+                marginBottom: this.state.open ? 45 : -175}}
               className="mapboxgl-ctrl-bottom-right mapbox-legend bottom-panel">
                 {bottomPanel}
             </div> 

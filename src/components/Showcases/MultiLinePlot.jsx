@@ -38,6 +38,11 @@ export default function MultiLinePlot(options) {
       includesLockdown = true;
     }
   })
+  if(hint) {
+    typeof hintXValue === 'function' && hint[0] &&
+    hintXValue(hint[0].x)
+  }
+  
   return data && data.length > 0 &&
     // https://github.com/uber/react-vis/issues/584#issuecomment-401693372
     <div className="unselectable" 
@@ -86,10 +91,9 @@ export default function MultiLinePlot(options) {
             key={"line-" + i}
             onValueClick={onValueClick}
             onNearestX={(_, { index }) => {
+              // each line calls setHint              
               setHint(data.map(d => d[index]))
               // console.log(data[0][index].x);
-              typeof hintXValue === 'function' && data[0] && data[0][index] && 
-              hintXValue(data[0][index].x)
             }}
             style={{ fill: 'none' }}
             data={line} 

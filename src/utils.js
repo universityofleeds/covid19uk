@@ -181,16 +181,17 @@ const generateDeckLayer = (name, data, renderTooltip, options) => {
     addOptionsToObject(options, arrowObj)
     return (new ArrowLayer(arrowObj))
   } else if (name === 'scatterplot') {
+    console.log("scatterplot")
     const scatterObj = {
       id: 'scatterplot-layer',
       data,
       pickable: true,
       opacity: 0.8,
-      radiusScale: 1.5,
+      radiusScale: 6,
       radiusMinPixels: 1,
       radiusMaxPixels: 100,
       getPosition: d => d && d.geometry && d.geometry.coordinates,
-      getColor: d => [255, 140, 0],
+      getColor: [255, 140, 0],
       onHover: renderTooltip
     }
     addOptionsToObject(options, scatterObj)

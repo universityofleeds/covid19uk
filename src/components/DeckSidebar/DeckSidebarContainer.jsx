@@ -24,7 +24,7 @@ export default (props) => {
       <DeckSidebar {...props}
         // Note: 
         // *****************************
-        // Hooks is strange see this
+        // Hooks are different, see this
         // https://stackoverflow.com/a/54069332/2332101
         // *****************************
         toggleOpen={() => setOpen(o => !o)}   // o is current open
@@ -35,11 +35,14 @@ export default (props) => {
           data={props.data} />}
       <div
         className="close-button"
-        onClick={() => setOpen(!open)}
-        style={{ color: 'white' }}>
-        <div style={{ backgroundColor: '#242730' }}>
+        onClick={() => {
+          setOpen(!open);
+          typeof (props.toggleOpen) === 'function' &&
+          props.toggleOpen(!open);
+        }}>
+        <div style={{ backgroundColor: props.dark ? '#242730' : '#fff'}}>
           <i
-            style={{ fontSize: '2rem', color: 'white !important' }}
+            style={{ fontSize: '2rem', color: props.dark ? '#fff' : '#000' }}
             className={open ? "fa fa-arrow-circle-left" :
               "fa fa-arrow-circle-right"} />
         </div>

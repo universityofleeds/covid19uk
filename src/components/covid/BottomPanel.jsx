@@ -6,9 +6,12 @@ import {
 
 import { useWindowSize } from '../../utils';
 
+// 320 of sidebar + 100 for legend + 40 
+const W = 460;
+const H = 100; // round size.
 export default React.memo((props) => {
   const [width] = useWindowSize();
-  const { history, dark } = props;
+  const { history, dark, full = false } = props;
   const key = "cases";
   const key2 = "deaths"; 
 
@@ -23,7 +26,7 @@ export default React.memo((props) => {
   return (
     <>
       England daily infection and deaths rates (per 100k population)
-      <BarChart width={width - 460} height={100}
+      <BarChart width={width - W} height={H}
         barGap={1}
         data={
           data.slice(26,data.length)

@@ -219,10 +219,9 @@ export default class DeckSidebar extends React.Component {
                         selected: multiVarSelect
                       });
                   }}
-                  hintXValue={(xValue) => {
-                    // update map on crosshair xvalue
-                    if (typeof onSelectCallback === 'function' &&
-                      xValue !== this.state.xValue) {
+                  hintXValue={(xValue) => {                    
+                    // update map on crosshair xvalue                    
+                    if (typeof onSelectCallback === 'function') {                        
                       onSelectCallback({
                         what: 'multi',
                         hint: xValue,
@@ -338,7 +337,8 @@ export default class DeckSidebar extends React.Component {
                   <FormControl
                     style={{
                       background: dark ? '#242730' : 'white',
-                      color: dark ? 'white' : 'black'
+                      color: dark ? 'white' : 'black',
+                      zIndex: 0,
                     }}
                     onChange={(e) => this.setState({ search: e.target.value })}
                     placeholder="fly to..." type="text" />

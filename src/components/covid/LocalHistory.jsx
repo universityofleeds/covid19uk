@@ -120,12 +120,12 @@ export default React.memo((props) => {
         />
         {
             <>
-              <Checkbox
+              {/* <Checkbox
                 checked={allDates}
                 onChange={e => {
                   setAllDates(e.target.checked)
                 }}
-              >Dates vary (raw figures)</Checkbox>
+              >Dates vary (raw figures)</Checkbox> */}
               <Checkbox
                 checked={total}
                 onChange={e => {
