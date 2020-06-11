@@ -7,12 +7,11 @@ import MultiSelect from '../MultiSelect';
 import './style.css';
 import CustomSlider from './CustomSlider';
 import BottomPanel from './BottomPanel';
-import {rollingavg} from './utils';
+import {rollingavg, getDates} from './utils';
 
 // import REChartsMultiLine from '../Showcases/REChartsMultiLine';
 
 export default React.memo((props) => {
-  const [allDates, setAllDates] = useState(false);
   const [total, setTotal] = useState(false);
 
   const [{ geo, avg, geoHistory, 
@@ -44,7 +43,7 @@ export default React.memo((props) => {
   React.useEffect(() => {
     initialState({
       data: props.data.rates, setData, setFilteredHistory,
-      type, allDates, measure
+      type, measure
     });
     typeof showBottomPanel === 'function' &&
     showBottomPanel(<BottomPanel  dark={dark}
@@ -52,7 +51,7 @@ export default React.memo((props) => {
         [props.data.rates.countries.E92000001.dailyConfirmedCasesByPop,
           props.data.rates.countries.E92000001.dailyDeathsByPop]
     }/>)
-  }, [type, totalCases, allDates])
+  }, [type, totalCases])
 
   if (filteredHistory) {
     //list history
@@ -61,18 +60,18 @@ export default React.memo((props) => {
       filteredHistory.avg = avg;
       keys.push("avg")
     }
-    // console.log(keys, filteredHistory);
+    // console.log('getDates()', getDates());
 
     return (
       <>
         Infection rates history:
-        <CustomSlider
-          dates={keys && keys[1] && filteredHistory &&
-            filteredHistory[keys[1]].map(e => e.x)} 
-          callback={(date) => {
-            typeof hintXValue === 'function' &&
-            hintXValue(date)
-          }}/>
+        {keys && keys[1] && filteredHistory &&
+          <CustomSlider
+            dates={getDates()}
+            callback={(date) => {
+              typeof hintXValue === 'function' &&
+                hintXValue(date)
+            }} />}
         {geo.length > 10 && <MultiSelect
           dark={dark}
           title="Compare"
@@ -145,7 +144,7 @@ export default React.memo((props) => {
 
 function initialState(options) {
   const { data, setData, setFilteredHistory,
-    type = "utlas", allDates, measure } = options
+    type = "utlas", measure } = options
   const {geoHistory, avg, rechartsData} = rollingavg(data, type, measure)
   const geo = Object.keys(geoHistory);
 

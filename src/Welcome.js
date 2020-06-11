@@ -125,7 +125,7 @@ export default class Welcome extends React.Component {
       legend: false,
       datasetName: defualtURL,
       bottomPanel: false,
-      layerStyle: Constants.LAYERSTYLES[1]
+      layerStyle: Constants.LAYERSTYLES[0]
     }
     this._generateLayer = this._generateLayer.bind(this)
     this._renderTooltip = this._renderTooltip.bind(this);
@@ -333,7 +333,7 @@ export default class Welcome extends React.Component {
     const cols = Object.keys(data && data[0] && 
       data[0].properties);
     if (geomType === "polygon" || geomType === "multipolygon") {
-      options.getFillColor = (d) =>
+      options.getFillColor = (d) => data.length === 1 ? [255,0,0] :
         colorScale(d, data, column ? column : 0)
       // options.highlightColor = this.props.dark ? '#fff' : '#000'
       options.autoHighlight = true

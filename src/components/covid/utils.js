@@ -203,12 +203,30 @@ const getLatestBlobFromPHE = (callback) => {
   });
 }
 
-function rollingavg(data, type, measure) {
+const changeDate = () => {
   Date.prototype.addDays = function (days) {
     var date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
     return date;
   }
+}
+
+function getDates(from = "2020-02-01", to) {
+  changeDate()  
+  let toDate = to || new Date();
+  let d = new Date(from);
+  const r = [];
+  while (d < toDate) {
+    r.push(d.getFullYear() + "-" +
+    (d.getMonth() + 1).toString().padStart(2, '0') + 
+    "-" + d.getDate())
+    d = d.addDays(1)
+  }
+  return r;
+}
+
+function rollingavg(data, type, measure) {
+  changeDate()
   const rechartsData = [];
   const geoHistory = {};
   const avg = [];
@@ -328,7 +346,8 @@ export {
   countryHistory,
   rollingavg,
   breakdown,
-  daysDiff
+  daysDiff,
+  getDates
 }
 
 function generateRates(data, population) {
